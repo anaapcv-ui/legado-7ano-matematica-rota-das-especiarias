@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resumo — Matemática 7º ano | Rota das Especiarias</title>
+<style>/* ====== ROTA DAS ESPECIARIAS — estilo comum ====== */
+:root{
+  --mar:#07242b; --mar2:#0d3540; --mar3:#12495a;
+  --madeira:#5b3a1f; --madeira2:#7d5230;
+  --ouro:#d9a441; --ouro2:#f0c667;
+  --perg:#f4e7cd; --perg2:#e6d3ad;
+  --canela:#b4552f; --verde:#3f8f6d; --verde2:#5fbf93;
+  --tinta:#2b1d10;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Georgia","Times New Roman",serif;
+  background:var(--mar);
+  background-image:radial-gradient(circle at 12% 8%, rgba(217,164,65,.10), transparent 45%),
+                   radial-gradient(circle at 88% 92%, rgba(63,143,109,.12), transparent 45%);
+  color:var(--perg); line-height:1.65; font-size:17px;
+}
+body.bloqueado > *:not(#capa-relogio){filter:blur(7px); pointer-events:none; user-select:none}
+.wrap{max-width:960px; margin:0 auto; padding:0 18px 80px}
+
+/* cabeçalho */
+header.topo{
+  background:linear-gradient(135deg,var(--mar2),var(--madeira));
+  border-bottom:4px solid var(--ouro); padding:26px 18px 20px; text-align:center;
+}
+header.topo .selo{font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--ouro2)}
+header.topo h1{margin:6px 0 4px; font-size:30px; color:var(--perg)}
+header.topo p.sub{margin:0; color:var(--perg2); font-size:15px}
+
+/* barra do relógio */
+.barra-rel{
+  position:sticky; top:0; z-index:50; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  justify-content:center; background:rgba(7,36,43,.96); border-bottom:1px solid rgba(217,164,65,.35);
+  padding:8px 14px; font-size:14px; font-family:system-ui,sans-serif;
+}
+.barra-rel #rel-tempo{color:var(--ouro2); font-weight:700}
+.barra-rel #rel-restante{color:var(--perg2); opacity:.85}
+#rel-aviso{display:none; width:100%; text-align:center; background:rgba(180,85,47,.25); border-radius:8px; padding:6px; margin-top:4px}
+
+/* navegação */
+nav.abas{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:18px 0 8px}
+nav.abas a{
+  font-family:system-ui,sans-serif; font-size:14px; text-decoration:none; padding:8px 14px; border-radius:999px;
+  color:var(--perg2); border:1px solid rgba(217,164,65,.4); background:rgba(13,53,64,.7);
+}
+nav.abas a.ativo{background:var(--ouro); color:var(--tinta); font-weight:700; border-color:var(--ouro)}
+
+/* cartões */
+.carta{
+  background:linear-gradient(180deg,var(--perg),var(--perg2)); color:var(--tinta);
+  border-radius:14px; padding:20px 22px; margin:18px 0;
+  box-shadow:0 8px 22px rgba(0,0,0,.35); border:1px solid rgba(91,58,31,.35);
+}
+.carta h2{margin:0 0 10px; font-size:22px; color:var(--madeira)}
+.carta h3{margin:16px 0 6px; font-size:18px; color:var(--canela)}
+.carta p{margin:10px 0}
+.escura{background:linear-gradient(180deg,var(--mar2),var(--mar)); color:var(--perg); border-color:rgba(217,164,65,.3)}
+.escura h2,.escura h3{color:var(--ouro2)}
+
+/* post-it e alertas */
+.postit{background:#ffe98a; color:#3a2b06; border-left:7px solid #e0a800; padding:12px 16px; border-radius:8px; margin:14px 0; box-shadow:2px 3px 8px rgba(0,0,0,.2)}
+.pegadinha{background:#fde3d8; color:#5d1f0c; border-left:7px solid var(--canela); padding:12px 16px; border-radius:8px; margin:14px 0}
+.narrador{background:rgba(63,143,109,.18); border-left:7px solid var(--verde); padding:12px 16px; border-radius:8px; margin:14px 0; font-style:italic}
+.formula{background:#10303a; color:var(--ouro2); font-family:"Courier New",monospace; font-size:18px; text-align:center; padding:12px; border-radius:10px; margin:12px 0; border:1px dashed var(--ouro)}
+.carta .formula{background:#2b1d10; color:var(--ouro2)}
+
+/* botões */
+.btn{font-family:system-ui,sans-serif; font-size:15px; padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:600}
+.btn-1{background:var(--ouro); color:var(--tinta)}
+.btn-1:hover{background:var(--ouro2)}
+.btn-2{background:transparent; color:var(--perg2); border:1px solid rgba(217,164,65,.5)}
+.btn-3{background:var(--verde); color:#04231a}
+.btn-grande{font-size:19px; padding:14px 30px}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+
+/* tabelas */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-family:system-ui,sans-serif; font-size:15px}
+th,td{border:1px solid rgba(91,58,31,.3); padding:8px 10px; text-align:left}
+th{background:var(--madeira); color:var(--perg)}
+.escura th{background:var(--mar3)}
+.escura td{border-color:rgba(217,164,65,.25)}
+
+/* campos */
+textarea,input[type=text]{
+  width:100%; font-family:system-ui,sans-serif; font-size:15px; padding:10px; border-radius:8px;
+  border:2px solid rgba(91,58,31,.35); background:#fffdf6; color:var(--tinta); resize:vertical;
+}
+textarea:focus,input[type=text]:focus{outline:none; border-color:var(--canela)}
+.perg{margin:16px 0; padding:14px; border-radius:10px; background:rgba(255,255,255,.45); border:1px solid rgba(91,58,31,.2)}
+.perg.vermelha{background:#ffe2dd; border:2px solid #c0392b}
+.perg .enun{font-weight:700; margin-bottom:8px}
+.aviso-copia{background:#fff4cc; border-left:6px solid #e0a800; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#4a3806}
+.aviso-vermelho{background:#ffd9d2; border-left:6px solid #c0392b; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#7d1f12}
+.modelo{background:#e8f5ee; border-left:6px solid var(--verde); padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:15px; color:#123a2b}
+.checklist{font-family:system-ui,sans-serif; font-size:14px; margin-top:8px}
+.checklist .item{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0}
+.checklist .item span{flex:1; min-width:180px}
+.mini{font-size:13px; padding:5px 12px; border-radius:8px; border:1px solid rgba(91,58,31,.4); background:#fff; cursor:pointer; font-family:system-ui,sans-serif}
+.mini.on-sim{background:var(--verde); color:#fff; border-color:var(--verde)}
+.mini.on-nao{background:var(--canela); color:#fff; border-color:var(--canela)}
+
+/* blocos */
+.bloco{margin:22px 0}
+.bloco.trancado .corpo{display:none}
+.bloco .cabeca{display:flex; gap:10px; align-items:center; cursor:pointer}
+.bloco .num{background:var(--ouro); color:var(--tinta); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex:none}
+.bloco.trancado .num{background:#6c6250; color:#ddd}
+.bloco .status{margin-left:auto; font-size:13px; font-family:system-ui,sans-serif}
+
+/* fixação */
+.fix{margin:10px 0; padding:12px; border-radius:10px; background:rgba(43,29,16,.07); border:1px solid rgba(91,58,31,.25)}
+.fix .alt{display:block; margin:6px 0; padding:8px 12px; border-radius:8px; background:#fffdf6; border:1px solid rgba(91,58,31,.25); cursor:pointer; font-family:system-ui,sans-serif; font-size:15px}
+.fix .alt:hover{background:#fff6e0}
+.fix .alt.escolhida{border-color:var(--canela); background:#ffeede}
+.fix .alt.certa{background:#d6f0e0; border-color:var(--verde)}
+.fix .alt.errada{background:#efe7e4; border-color:#999; opacity:.75}
+.barra{height:12px; background:rgba(0,0,0,.2); border-radius:999px; overflow:hidden; margin:10px 0}
+.barra div{height:100%; background:linear-gradient(90deg,var(--verde),var(--ouro)); width:0; transition:width .4s}
+
+/* capa do relógio */
+.capa-relogio{position:fixed; inset:0; z-index:200; background:rgba(7,36,43,.97); display:flex; align-items:center; justify-content:center; padding:20px}
+.capa-cx{max-width:520px; text-align:center; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:18px; padding:34px 26px}
+.capa-icone{font-size:54px}
+.capa-cx h2{color:var(--ouro2); margin:8px 0 12px}
+.capa-cx p{color:var(--perg2); font-size:16px}
+
+/* modais */
+.modal-bg{position:fixed; inset:0; background:rgba(4,18,22,.85); display:flex; align-items:center; justify-content:center; z-index:300; padding:20px}
+.modal-cx{max-width:520px; width:100%; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:16px; padding:24px}
+.modal-cx h3{margin:0 0 10px; color:var(--ouro2)}
+.modal-corpo{color:var(--perg2); font-size:16px}
+.modal-pe{display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap}
+.pausa-relogio{font-size:34px; text-align:center; color:var(--ouro2); font-family:"Courier New",monospace}
+
+/* painel salvar */
+.painel{background:rgba(13,53,64,.85); border:1px solid rgba(217,164,65,.35); border-radius:12px; padding:14px; margin:22px 0; font-family:system-ui,sans-serif; font-size:14px; text-align:center}
+.painel .linha{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+.painel textarea{min-height:120px; margin-top:10px}
+
+/* rodapé de navegação */
+.proximo{text-align:center; margin:32px 0 10px}
+.proximo a{display:inline-block; background:var(--verde); color:#04231a; text-decoration:none; padding:14px 26px; border-radius:12px; font-family:system-ui,sans-serif; font-weight:700}
+
+/* utilitários */
+.centro{text-align:center}
+.pequeno{font-size:14px}
+.oculto{display:none}
+.selo-ok{color:var(--verde2)} .selo-rev{color:#ffb26b}
+ul.limpa{padding-left:20px} ul.limpa li{margin:6px 0}
+@media(max-width:520px){
+  body{font-size:16px}
+  header.topo h1{font-size:24px}
+  .carta{padding:16px}
+}
+
+.flipgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin:16px 0}
+.flip{perspective:900px; height:180px; cursor:pointer}
+.flip .in{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d}
+.flip.virado .in{transform:rotateY(180deg)}
+.flip .f,.flip .v{position:absolute; inset:0; backface-visibility:hidden; border-radius:14px; padding:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center}
+.flip .f{background:linear-gradient(160deg,#12495a,#0d3540); border:2px solid var(--ouro); color:var(--perg)}
+.flip .v{background:linear-gradient(160deg,#f4e7cd,#e6d3ad); color:var(--tinta); transform:rotateY(180deg); border:2px solid var(--madeira); font-size:15px}
+.flip .f b{font-size:19px; color:var(--ouro2)}
+.flip .dica{font-size:12px; opacity:.7; margin-top:8px}
+.chk-estudei{display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px; font-family:system-ui,sans-serif; font-size:14px}
+.chk-estudei input{width:20px; height:20px}
+.dupla{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+@media(max-width:620px){ .dupla{grid-template-columns:1fr} }
+.mini-tab td{font-size:15px}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="selo">⚓ Rota das Especiarias · Matemática 7º ano</div>
+  <h1>🗺️ Resumo Interativo</h1>
+  <p class="sub">Tudo o que cai na prova de 17/09, em cartas de bordo</p>
+</header>
+
+<div class="barra-rel">
+  <span id="rel-tempo">⏱️ 0min 00s</span>
+  <span id="rel-restante">parado</span>
+  <button class="btn btn-2" id="btn-terminar" style="padding:4px 12px;font-size:13px">⏹ Terminar agora</button>
+  <div id="rel-aviso"></div>
+</div>
+
+<div class="wrap">
+  <nav class="abas">
+    <a href="index.html">🏠 Início</a>
+    <a href="leitura.html">📖 Leitura</a>
+    <a class="ativo" href="resumo.html">🗺️ Resumo</a>
+    <a href="simulado.html">📝 Simulado</a>
+  </nav>
+
+  <div class="carta escura">
+    <h2>Seu progresso na leitura do resumo</h2>
+    <div class="barra"><div id="barra-rolagem"></div></div>
+    <p class="centro pequeno" id="txt-rolagem">0% do resumo percorrido</p>
+    <div class="barra"><div id="barra-estudei"></div></div>
+    <p class="centro pequeno" id="txt-estudei">0 de 7 partes marcadas como estudadas</p>
+  </div>
+
+  <div id="anotacoes-topo"></div>
+
+  <div class="carta" id="s1">
+    <h2>⚖️ Regra de três — o mapa dos 3 passos</h2>
+    
+<div class="formula">1) organizar &nbsp;→&nbsp; 2) DP ou IP? &nbsp;→&nbsp; 3) montar e resolver</div>
+<p><b>Razão</b> é uma comparação por divisão (4/6). <b>Proporção</b> é a igualdade
+entre duas razões (4/6 = 10/15).</p>
+<div class="formula">a/b = c/d &nbsp;⇒&nbsp; a · d = b · c</div>
+<table class="mini-tab">
+<thead><tr><th></th><th>Diretamente proporcionais (DP)</th><th>Inversamente proporcionais (IP)</th></tr></thead>
+<tbody>
+<tr><td><b>Como reconhecer</b></td><td>uma sobe, a outra sobe</td><td>uma sobe, a outra desce</td></tr>
+<tr><td><b>Exemplos</b></td><td>tinta e área pintada; distância e gasolina; quantidade e preço</td><td>velocidade e tempo; trabalhadores e dias; torneiras e tempo</td></tr>
+<tr><td><b>Como montar</b></td><td>na ordem em que aparecem</td><td>invertendo a <u>segunda</u> razão</td></tr>
+<tr><td><b>Atalho</b></td><td>as razões são iguais</td><td>o produto de cada linha é igual</td></tr>
+</tbody></table>
+<div class="postit">📌 <b>Dica de prova:</b> antes de escrever qualquer conta, escreva ao lado da tabela
+"DP" ou "IP". Quem decide isso primeiro quase não erra.</div>
+<h3>Modelos resolvidos que caem na prova</h3>
+<div class="dupla">
+<div class="fix"><b>DP — tinta</b><br>2 latas → 3 m²; x latas → 19,5 m²<br>
+2/x = 3/19,5 → 3x = 39 → <b>x = 13 latas</b></div>
+<div class="fix"><b>IP — pintores</b><br>4 pintores → 15 dias; 6 pintores → x<br>
+4/6 = x/15 → 6x = 60 → <b>x = 10 dias</b></div>
+<div class="fix"><b>IP — ônibus</b><br>90 km/h → 4 h; 120 km/h → x<br>
+90 · 4 = 120 · x → <b>x = 3 h</b></div>
+<div class="fix"><b>DP — torneira</b><br>50 L → 20 min; 600 L → x<br>
+50x = 12 000 → x = 240 min = <b>4 horas</b></div>
+<div class="fix"><b>IP — kart</b><br>4 min 30 s = 4,5 min a 80 km/h → 100 km/h<br>
+80 · 4,5 = 100x → <b>x = 3,6 min (3 min 36 s)</b></div>
+<div class="fix"><b>DP — gasolina</b><br>42 L → 504 km; x → 144 km<br>
+504x = 6 048 → <b>x = 12 litros</b></div>
+</div>
+<div class="pegadinha">⚠️ <b>Pegadinha:</b> unidade! 4 min 30 s = 4,5 min (não 4,30). 90 dias = 3 meses.
+1 trimestre = 3 meses. Se a pergunta pede horas, não entregue minutos.</div>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s1"><label for="ck-s1">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s2">
+    <h2>💰 Matemática financeira — fatores e juros</h2>
+    
+<p>Porcentagem é razão com denominador 100: 8% = 8/100 = 0,08.</p>
+<div class="formula">aumento: × (1 + taxa) &nbsp;&nbsp;|&nbsp;&nbsp; desconto: × (1 − taxa)</div>
+<table class="mini-tab">
+<thead><tr><th>Taxa</th><th>Fator de AUMENTO</th><th>Fator de DESCONTO</th></tr></thead>
+<tbody>
+<tr><td>4%</td><td>1,04</td><td>0,96</td></tr>
+<tr><td>8%</td><td>1,08</td><td>0,92</td></tr>
+<tr><td>10%</td><td>1,10</td><td>0,90</td></tr>
+<tr><td>12%</td><td>1,12</td><td>0,88</td></tr>
+<tr><td>15%</td><td>1,15</td><td>0,85</td></tr>
+<tr><td>20%</td><td>1,20</td><td>0,80</td></tr>
+<tr><td>28%</td><td>1,28</td><td>0,72</td></tr>
+<tr><td>30%</td><td>1,30</td><td>0,70</td></tr>
+<tr><td>32%</td><td>1,32</td><td>0,68</td></tr>
+<tr><td>36%</td><td>1,36</td><td>0,64</td></tr>
+<tr><td>40%</td><td>1,40</td><td>0,60</td></tr>
+</tbody></table>
+<div class="postit">📌 <b>Macete:</b> o fator de desconto é o "resto para 100". Desconto de 12% →
+100 − 12 = 88 → fator 0,88.</div>
+<h3>Contas do livro, prontas para conferir</h3>
+<table class="mini-tab">
+<thead><tr><th>Situação</th><th>Conta</th><th>Resposta</th></tr></thead>
+<tbody>
+<tr><td>Bicicleta R$ 800 com +8%</td><td>800 × 1,08</td><td>R$ 864,00</td></tr>
+<tr><td>Chuveiro R$ 115 com +12%</td><td>115 × 1,12</td><td>R$ 128,80</td></tr>
+<tr><td>Livro R$ 35 com +30%</td><td>35 × 1,30</td><td>R$ 45,50</td></tr>
+<tr><td>Jogo R$ 85,50 com +32%</td><td>85,50 × 1,32</td><td>R$ 112,86</td></tr>
+<tr><td>Streaming R$ 40 com −15%</td><td>40 × 0,85</td><td>R$ 34,00</td></tr>
+<tr><td>Tênis R$ 280 com −4%</td><td>280 × 0,96</td><td>R$ 268,80</td></tr>
+<tr><td>Luminária R$ 75,90 com −20%</td><td>75,90 × 0,80</td><td>R$ 60,72</td></tr>
+<tr><td>Panelas R$ 420 com −40%</td><td>420 × 0,60</td><td>R$ 252,00</td></tr>
+<tr><td>Tênis R$ 359,90 com −12%</td><td>359,90 × 0,88</td><td>R$ 316,71</td></tr>
+<tr><td>Salário R$ 2 700 com −28%</td><td>2 700 × 0,72</td><td>R$ 1 944,00</td></tr>
+<tr><td>Salário R$ 2 700 com +20%</td><td>2 700 × 1,20</td><td>R$ 3 240,00</td></tr>
+</tbody></table>
+<h3>Juros simples</h3>
+<div class="formula">J = C · i · t &nbsp;&nbsp;&nbsp; M = C + J</div>
+<ul class="limpa">
+<li><b>C</b> = capital (o valor do começo) · <b>i</b> = taxa em decimal · <b>t</b> = tempo</li>
+<li><b>J</b> = juros (só o extra) · <b>M</b> = montante (capital + juros)</li>
+<li>Regra de ouro: <b>taxa e tempo na mesma unidade</b>. Taxa ao mês exige tempo em meses.</li>
+</ul>
+<table class="mini-tab">
+<thead><tr><th>Problema</th><th>Conta</th><th>Resposta</th></tr></thead>
+<tbody>
+<tr><td>Marina: R$ 60 000, 2% a.m., 8 meses — juros</td><td>60 000 × 0,02 × 8</td><td>R$ 9 600,00</td></tr>
+<tr><td>Marina — montante</td><td>60 000 + 9 600</td><td>R$ 69 600,00</td></tr>
+<tr><td>R$ 9 520, 2% a.m., 90 dias (= 3 meses)</td><td>9 520 × 0,02 × 3</td><td>R$ 571,20</td></tr>
+<tr><td>R$ 180 500, 15% a.a., 1 trimestre</td><td>180 500 × 0,15 × 0,25</td><td>R$ 6 768,75</td></tr>
+<tr><td>Larissa: R$ 4 000, 3% a.m., 2 meses</td><td>4 000 × 0,03 × 2</td><td>R$ 240,00</td></tr>
+<tr><td>Larissa: 3 anos (= 36 meses)</td><td>4 000 × 0,03 × 36</td><td>R$ 4 320,00</td></tr>
+<tr><td>Larissa: montante em 8 meses</td><td>4 000 + 960</td><td>R$ 4 960,00</td></tr>
+</tbody></table>
+<div class="pegadinha">⚠️ <b>Pegadinha:</b> a questão pede JUROS ou MONTANTE? Trocar um pelo outro é o
+erro mais comum da prova. E o valor do desconto nunca é o preço final.</div>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s2"><label for="ck-s2">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s3">
+    <h2>📐 Triângulos — classificação (vire as cartas)</h2>
+    
+<p>Todo triângulo tem <b>duas</b> classificações ao mesmo tempo: uma pelos lados e outra
+pelos ângulos. Toque em cada carta para virar.</p>
+<div class="flipgrid" id="cartas"></div>
+<div class="postit">📌 <b>Dica de prova:</b> equilátero tem sempre 60°, 60°, 60° — e por isso é
+sempre acutângulo. No isósceles, os <b>ângulos da base são iguais</b>: é daí que sai o x
+de quase toda questão.</div>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s3"><label for="ck-s3">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s4">
+    <h2>🧭 Triângulos — ângulos internos e externos</h2>
+    
+<div class="formula">soma dos internos = 180°</div>
+<div class="formula">externo = soma dos dois internos NÃO vizinhos</div>
+<div class="formula">externo + interno vizinho = 180°</div>
+<table class="mini-tab">
+<thead><tr><th>Situação</th><th>Como resolver</th><th>Resultado</th></tr></thead>
+<tbody>
+<tr><td>Ângulos 20° e 30°, achar o terceiro</td><td>180 − (20 + 30)</td><td>130°</td></tr>
+<tr><td>Ângulos 57° e 34°, achar o terceiro</td><td>180 − 91</td><td>89°</td></tr>
+<tr><td>Retângulo com um agudo de 41°</td><td>180 − 90 − 41</td><td>49°</td></tr>
+<tr><td>Escada a 60° do chão, ângulo com a parede</td><td>180 − 90 − 60</td><td>30°</td></tr>
+<tr><td>2º mede 28 a menos que o 1º; 3º mede 10 a mais</td><td>3x − 18 = 180</td><td>66°, 38°, 76°</td></tr>
+<tr><td>Isósceles base BC, externos 2x − 40 e x + 45</td><td>2x − 40 = x + 45</td><td>x = 85 → base 50°, vértice 80°</td></tr>
+<tr><td>Isósceles base AC com vértice de 80°</td><td>(180 − 80) ÷ 2</td><td>50° e 50°</td></tr>
+</tbody></table>
+<div class="narrador">🧭 <b>Nota do navegador:</b> nos triângulos com letras (2x − 10, x + 11…),
+o caminho é sempre o mesmo: descubra quais medidas são <i>iguais</i>, monte a equação,
+ache o x e só então volte para calcular os ângulos.</div>
+<div class="pegadinha">⚠️ <b>Pegadinha:</b> achar o x <b>não</b> é achar o ângulo. Depois de
+encontrar x, substitua na expressão para responder o que a questão pediu de verdade.</div>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s4"><label for="ck-s4">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s5">
+    <h2>📏 Triângulos — condição de existência</h2>
+    
+<div class="formula">|b − c| &lt; a &lt; b + c</div>
+<p>Cada lado precisa ser <b>menor que a soma</b> e <b>maior que a diferença</b> dos
+outros dois. Para conferir três medidas prontas, basta ver se a soma das duas menores
+é maior que a maior.</p>
+<table class="mini-tab">
+<thead><tr><th>Medidas</th><th>Teste</th><th>Forma triângulo?</th></tr></thead>
+<tbody>
+<tr><td>3, 4 e 8</td><td>3 + 4 = 7 &lt; 8</td><td>❌ não</td></tr>
+<tr><td>4, 5 e 9</td><td>4 + 5 = 9, não é maior que 9</td><td>❌ não</td></tr>
+<tr><td>5, 7 e x</td><td>2 &lt; x &lt; 12</td><td>✔️ nesse intervalo</td></tr>
+<tr><td>6, 10 e x</td><td>4 &lt; x &lt; 16</td><td>✔️ nesse intervalo</td></tr>
+<tr><td>x − 1, x + 1 e 10</td><td>10 &lt; 2x → x &gt; 5</td><td>menor inteiro: <b>6</b></td></tr>
+<tr><td>2x, x − 1 e 13</td><td>x &lt; 12 e x &gt; 4,67</td><td>inteiros de <b>5 a 11</b></td></tr>
+<tr><td>x + 4, 2x + 6 e 12 − 2x</td><td>0,4 &lt; x &lt; 3,33</td><td>menor inteiro: <b>1</b></td></tr>
+</tbody></table>
+<div class="pegadinha">⚠️ <b>Pegadinha:</b> com letras, monte as <b>três</b> desigualdades e ainda
+confira se todos os lados dão números positivos.</div>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s5"><label for="ck-s5">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s6">
+    <h2>🚨 As 10 armadilhas desta prova</h2>
+    
+<ol class="limpa">
+<li>Unidade diferente nos dois lados da regra de três (min × h, g × kg, dias × meses).</li>
+<li>Esquecer de inverter a segunda razão numa regra de três inversa.</li>
+<li>Inverter as <b>duas</b> razões (é o mesmo que não inverter nenhuma).</li>
+<li>Confundir o fator: desconto de 40% é × 0,60, e não × 0,40.</li>
+<li>Parar no valor do desconto e não calcular o preço final.</li>
+<li>Achar que +10% e depois −10% volta ao preço original (não volta: R$ 100 → R$ 110 → R$ 99).</li>
+<li>Em juros simples, usar taxa ao mês com tempo em anos sem converter.</li>
+<li>Responder juros quando a questão pediu montante (ou o contrário).</li>
+<li>Classificar o triângulo só de um jeito, quando a questão pede pelos lados <b>e</b> pelos ângulos.</li>
+<li>Parar no valor de x sem substituir para achar o ângulo ou o lado pedido.</li>
+</ol>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s6"><label for="ck-s6">Já estudei esta parte</label></div>
+  </div>
+
+  <div class="carta" id="s7">
+    <h2>📖 Glossário de bordo</h2>
+    
+<table class="mini-tab">
+<tbody>
+<tr><td><b>Razão</b></td><td>comparação entre dois números por divisão (a/b)</td></tr>
+<tr><td><b>Proporção</b></td><td>igualdade entre duas razões (a/b = c/d)</td></tr>
+<tr><td><b>Meios e extremos</b></td><td>meios são os de dentro (b e c); extremos, os das pontas (a e d)</td></tr>
+<tr><td><b>Grandeza</b></td><td>tudo que pode ser medido ou contado (tempo, preço, área, pessoas)</td></tr>
+<tr><td><b>DP / IP</b></td><td>diretamente proporcionais (sobem juntas) / inversamente proporcionais (uma sobe, a outra desce)</td></tr>
+<tr><td><b>Fator de multiplicação</b></td><td>número que já faz o aumento ou o desconto numa conta só</td></tr>
+<tr><td><b>Capital</b></td><td>valor do começo, antes dos juros</td></tr>
+<tr><td><b>Juros</b></td><td>o valor extra pago ou recebido pelo tempo</td></tr>
+<tr><td><b>Montante</b></td><td>capital + juros, ou seja, o total no fim</td></tr>
+<tr><td><b>Congruentes</b></td><td>de medidas iguais</td></tr>
+<tr><td><b>Ângulo externo</b></td><td>formado pelo prolongamento de um lado do triângulo</td></tr>
+<tr><td><b>Ângulos adjacentes</b></td><td>os que ficam lado a lado, com um lado em comum</td></tr>
+</tbody></table>
+
+    <div class="chk-estudei"><input type="checkbox" id="ck-s7"><label for="ck-s7">Já estudei esta parte</label></div>
+  </div>
+
+
+  <div class="carta escura">
+    <h2>📝 Minhas anotações</h2>
+    <p class="pequeno">Escreva aqui o que você quer levar na memória para a prova.</p>
+    <textarea id="anot" rows="6" placeholder="Ex.: lembrar que desconto de 12% é vezes 0,88..."></textarea>
+  </div>
+
+  <div class="proximo"><a href="simulado.html">Próximo material: 📝 Simulado →</a></div>
+
+  <div class="painel">
+    <div>💾 Salvamento automático — <span id="salvo-quando">ainda não salvo</span></div>
+    <div class="linha">
+      <button class="btn btn-2" onclick="exportarTudo()">📥 Exportar</button>
+      <button class="btn btn-2" onclick="importarTudo()">📤 Importar</button>
+      <button class="btn btn-2" onclick="zerarTudo()">🗑️ Zerar tudo</button>
+    </div>
+    <div id="caixa-export" style="display:none"><p class="pequeno">Copie este texto e guarde num arquivo:</p><textarea readonly></textarea></div>
+    <div id="caixa-import" style="display:none"><p class="pequeno">Cole aqui o texto do backup:</p><textarea id="area-import"></textarea>
+      <button class="btn btn-1" onclick="confirmarImport()">Restaurar</button></div>
+  </div>
+</div>
+
+<script>
+/* ====== NÚCLEO COMUM — Rota das Especiarias (kit 7º ano Matemática) ====== */
+/* Armazenamento seguro (não quebra se o navegador bloquear) */
+var MEM = {};
+var Store = {
+  get: function (k) {
+    try { var v = localStorage.getItem(k); return v === null ? (MEM[k] === undefined ? null : MEM[k]) : v; }
+    catch (e) { return MEM[k] === undefined ? null : MEM[k]; }
+  },
+  set: function (k, v) {
+    MEM[k] = v;
+    try { localStorage.setItem(k, v); } catch (e) { }
+  },
+  del: function (k) {
+    delete MEM[k];
+    try { localStorage.removeItem(k); } catch (e) { }
+  },
+  getJSON: function (k, def) { var v = this.get(k); if (!v) return def; try { return JSON.parse(v); } catch (e) { return def; } },
+  setJSON: function (k, o) { this.set(k, JSON.stringify(o)); }
+};
+
+/* Modal desenhado na página (nunca alert/confirm/prompt) */
+function modal(titulo, corpoHTML, botoes) {
+  var velho = document.getElementById('modal-bg');
+  if (velho) velho.remove();
+  var bg = document.createElement('div');
+  bg.id = 'modal-bg';
+  bg.className = 'modal-bg';
+  var cx = document.createElement('div');
+  cx.className = 'modal-cx';
+  cx.innerHTML = '<h3>' + titulo + '</h3><div class="modal-corpo">' + corpoHTML + '</div>';
+  var pe = document.createElement('div');
+  pe.className = 'modal-pe';
+  (botoes || [{ texto: 'Fechar' }]).forEach(function (b) {
+    var bt = document.createElement('button');
+    bt.className = 'btn ' + (b.classe || 'btn-2');
+    bt.textContent = b.texto;
+    bt.onclick = function () { bg.remove(); if (b.acao) b.acao(); };
+    pe.appendChild(bt);
+  });
+  cx.appendChild(pe);
+  bg.appendChild(cx);
+  document.body.appendChild(bg);
+  return bg;
+}
+
+/* ====== RELÓGIO DE ESTUDO ====== */
+var RELOGIO = (function () {
+  var KEY = '', MIN_SESSAO = 45, INAT = 180000, PAUSA = 300000;
+  var d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} };
+  var sessaoMs = 0, rodando = false, travado = false, ultimaAtiv = Date.now(), pausadoInat = false;
+  var elTempo, elAviso, timer, fimPausa = 0, inicioSessao = null;
+
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000), m = Math.floor(s / 60), h = Math.floor(m / 60);
+    m = m % 60; s = s % 60;
+    return (h > 0 ? h + 'h ' : '') + m + 'min ' + (s < 10 ? '0' : '') + s + 's';
+  }
+  function salvar() {
+    d.extra = d.extra || {};
+    Store.setJSON(KEY + '_tempo', d);
+  }
+  function pintar() {
+    if (!elTempo) return;
+    elTempo.textContent = '⏱️ ' + fmt(d.ativoMs);
+    var restante = MIN_SESSAO * 60000 - sessaoMs;
+    var elRest = document.getElementById('rel-restante');
+    if (elRest) elRest.textContent = travado ? 'pausa obrigatória' : (rodando ? 'faltam ' + Math.max(0, Math.ceil(restante / 60000)) + ' min nesta sessão' : 'parado');
+  }
+  function marcarAtividade() {
+    ultimaAtiv = Date.now();
+    if (pausadoInat) { pausadoInat = false; esconderAviso(); }
+  }
+  function mostrarAviso(html) {
+    if (!elAviso) return;
+    elAviso.innerHTML = html;
+    elAviso.style.display = 'block';
+  }
+  function esconderAviso() { if (elAviso) elAviso.style.display = 'none'; }
+
+  function tick() {
+    if (!rodando) return;
+    var agora = Date.now();
+    if (travado) {
+      var falta = fimPausa - agora;
+      if (falta <= 0) { destravar(); }
+      else {
+        var mm = Math.floor(falta / 60000), ss = Math.floor((falta % 60000) / 1000);
+        var el = document.getElementById('pausa-contagem');
+        if (el) el.textContent = mm + ':' + (ss < 10 ? '0' : '') + ss;
+      }
+      return;
+    }
+    d.totalMs += 1000;
+    if (agora - ultimaAtiv < INAT) {
+      d.ativoMs += 1000;
+      sessaoMs += 1000;
+    } else if (!pausadoInat) {
+      pausadoInat = true;
+      mostrarAviso('😴 <b>Estudo pausado</b> — toque na tela para continuar.');
+    }
+    if (sessaoMs >= MIN_SESSAO * 60000) travar();
+    if (d.totalMs % 10000 === 0) salvar();
+    pintar();
+  }
+
+  function travar() {
+    travado = true; sessaoMs = 0; fimPausa = Date.now() + PAUSA;
+    var bg = document.createElement('div');
+    bg.id = 'pausa-bg'; bg.className = 'modal-bg';
+    bg.innerHTML = '<div class="modal-cx"><h3>⚓ Hora de ancorar!</h3><div class="modal-corpo">' +
+      '<p>Você estudou <b>' + MIN_SESSAO + ' minutos</b> seguidos. Agora é pausa obrigatória de 5 minutos.</p>' +
+      '<p>Levante, beba água, olhe pela janela. O material volta sozinho.</p>' +
+      '<p class="pausa-relogio">⏳ <span id="pausa-contagem">5:00</span></p></div></div>';
+    document.body.appendChild(bg);
+    salvar();
+  }
+  function destravar() {
+    travado = false;
+    var bg = document.getElementById('pausa-bg');
+    if (bg) bg.remove();
+    marcarAtividade();
+  }
+
+  function comecar() {
+    var capa = document.getElementById('capa-relogio');
+    if (capa) capa.remove();
+    document.body.classList.remove('bloqueado');
+    rodando = true; inicioSessao = new Date().toISOString();
+    marcarAtividade();
+    if (!timer) timer = setInterval(tick, 1000);
+    pintar();
+  }
+
+  function terminar(cb) {
+    modal('⏹ Terminar agora?', '<p>Quer encerrar o estudo agora? O tempo é salvo e, no quiz ou simulado, a tentativa é <b>fechada como está</b> — mesmo com questões em branco.</p>',
+      [{ texto: 'Continuar estudando', classe: 'btn-2' },
+      {
+        texto: 'Sim, terminar', classe: 'btn-1', acao: function () {
+          rodando = false;
+          if (inicioSessao) { d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() }); inicioSessao = null; }
+          salvar(); pintar();
+          if (cb) cb();
+        }
+      }]);
+  }
+
+  return {
+    init: function (opts) {
+      KEY = opts.key;
+      MIN_SESSAO = opts.minutos || 45;
+      d = Store.getJSON(KEY + '_tempo', { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} });
+      d.sessoes = d.sessoes || []; d.extra = d.extra || {};
+      elTempo = document.getElementById('rel-tempo');
+      elAviso = document.getElementById('rel-aviso');
+      document.body.classList.add('bloqueado');
+      var capa = document.createElement('div');
+      capa.id = 'capa-relogio';
+      capa.className = 'capa-relogio';
+      capa.innerHTML = '<div class="capa-cx"><div class="capa-icone">⏱️</div><h2>' + (opts.titulo || 'Pronto para zarpar?') + '</h2>' +
+        '<p>O relógio de estudo conta quanto tempo você estudou de verdade. Cada viagem dura <b>' + MIN_SESSAO + ' minutos</b>, depois vem uma pausa de 5 minutos.</p>' +
+        '<button class="btn btn-1 btn-grande" id="btn-comecar">⛵ Começar a estudar</button></div>';
+      document.body.appendChild(capa);
+      document.getElementById('btn-comecar').onclick = comecar;
+      ['click', 'keydown', 'scroll', 'touchstart', 'input'].forEach(function (ev) {
+        document.addEventListener(ev, marcarAtividade, true);
+      });
+      window.addEventListener('beforeunload', function () {
+        if (inicioSessao) d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() });
+        salvar();
+      });
+      pintar();
+      var bt = document.getElementById('btn-terminar');
+      if (bt) bt.onclick = function () { terminar(opts.aoTerminar); };
+    },
+    extra: function (obj) { d.extra = Object.assign(d.extra || {}, obj); salvar(); },
+    dados: function () { return d; },
+    zerar: function () { d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} }; sessaoMs = 0; salvar(); pintar(); },
+    fmt: fmt,
+    _debug: function (o) { if (o && o.restante !== undefined) sessaoMs = MIN_SESSAO * 60000 - o.restante * 1000; if (o && o.inat !== undefined) ultimaAtiv = Date.now() - o.inat * 1000; if (o && o.pausa !== undefined) fimPausa = Date.now() + o.pausa * 1000; },
+    _tick: tick,
+    _comecar: comecar,
+    _travado: function(){ return travado; },
+    _sessao: function(){ return sessaoMs; }
+  };
+})();
+
+/* ====== ANTICÓPIA ====== */
+var Anticopia = (function () {
+  function norm(t) {
+    return (t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function pal(t) { var n = norm(t); return n ? n.split(' ') : []; }
+  /* marca as palavras de A que estão em sequências comuns com B de tamanho >= min */
+  function marcar(a, b, min) {
+    var marcas = new Array(a.length).fill(0), maior = 0;
+    var prev = new Array(b.length + 1).fill(0);
+    for (var i = 0; i < a.length; i++) {
+      var cur = new Array(b.length + 1).fill(0);
+      for (var j = 0; j < b.length; j++) {
+        if (a[i] === b[j]) {
+          cur[j + 1] = prev[j] + 1;
+          if (cur[j + 1] > maior) maior = cur[j + 1];
+          if (cur[j + 1] >= min) {
+            for (var k = 0; k < cur[j + 1]; k++) marcas[i - k] = 1;
+          }
+        }
+      }
+      prev = cur;
+    }
+    return { marcas: marcas, maior: maior };
+  }
+  return {
+    /* true = a resposta é transcrição do texto do bloco */
+    ehCopia: function (resposta, textoBloco, pergunta) {
+      var r = pal(resposta);
+      if (r.length < 6) return false;
+      var citacao = marcar(r, pal(pergunta || ''), 4).marcas;
+      var livres = [], mapa = [];
+      for (var i = 0; i < r.length; i++) { if (!citacao[i]) { livres.push(r[i]); mapa.push(i); } }
+      if (livres.length < 6) return false;
+      var t = pal(textoBloco);
+      var m8 = marcar(livres, t, 8);
+      if (m8.maior >= 8) return true;
+      var m5 = marcar(livres, t, 5);
+      var soma = m5.marcas.reduce(function (x, y) { return x + y; }, 0);
+      return (soma / livres.length) > 0.6;
+    },
+    _norm: norm
+  };
+})();
+
+/* ====== PAINEL DE SALVAMENTO ====== */
+function painelSalvar(KEY, coletar, restaurar, aoZerar) {
+  function carimbo() {
+    var q = Store.get(KEY + '_quando');
+    var el = document.getElementById('salvo-quando');
+    if (el) el.textContent = q ? 'último salvamento: ' + q : 'ainda não salvo';
+  }
+  window.salvarAgora = function () {
+    Store.setJSON(KEY, coletar());
+    Store.set(KEY + '_quando', new Date().toLocaleString('pt-BR'));
+    carimbo();
+  };
+  window.exportarTudo = function () {
+    var pacote = { chave: KEY, dados: Store.getJSON(KEY, {}), tempo: Store.getJSON(KEY + '_tempo', {}), quando: Store.get(KEY + '_quando') };
+    var txt = JSON.stringify(pacote, null, 2);
+    var cx = document.getElementById('caixa-export');
+    cx.style.display = 'block';
+    cx.querySelector('textarea').value = txt;
+    cx.querySelector('textarea').select();
+  };
+  window.importarTudo = function () {
+    var cx = document.getElementById('caixa-import');
+    cx.style.display = 'block';
+  };
+  window.confirmarImport = function () {
+    var txt = document.getElementById('area-import').value;
+    try {
+      var p = JSON.parse(txt);
+      if (p.dados) Store.setJSON(KEY, p.dados);
+      if (p.tempo) Store.setJSON(KEY + '_tempo', p.tempo);
+      if (p.quando) Store.set(KEY + '_quando', p.quando);
+      modal('✅ Importado', '<p>Os dados voltaram. A página vai recarregar.</p>', [{ texto: 'Ok', classe: 'btn-1', acao: function () { location.reload(); } }]);
+    } catch (e) {
+      modal('❌ Não deu', '<p>Esse texto não parece um arquivo de backup válido.</p>', [{ texto: 'Ok', classe: 'btn-1' }]);
+    }
+  };
+  window.zerarTudo = function () {
+    modal('🗑️ Zerar tudo?', '<p>Isso apaga todas as respostas <b>e o tempo de estudo</b> deste material. Não dá para desfazer.</p>',
+      [{ texto: 'Cancelar', classe: 'btn-2' },
+      {
+        texto: 'Sim, apagar', classe: 'btn-1', acao: function () {
+          Store.del(KEY); Store.del(KEY + '_quando'); Store.del(KEY + '_tempo');
+          if (aoZerar) aoZerar();
+          location.reload();
+        }
+      }]);
+  };
+  carimbo();
+  if (restaurar) restaurar(Store.getJSON(KEY, null));
+  setInterval(function () { window.salvarAgora(); }, 15000);
+}
+
+
+var KEY = 'mat7_rota_resumo';
+var SEC = [["s1", "⚖️", "Regra de três — o mapa dos 3 passos"], ["s2", "💰", "Matemática financeira — fatores e juros"], ["s3", "📐", "Triângulos — classificação (vire as cartas)"], ["s4", "🧭", "Triângulos — ângulos internos e externos"], ["s5", "📏", "Triângulos — condição de existência"], ["s6", "🚨", "As 10 armadilhas desta prova"], ["s7", "📖", "Glossário de bordo"]];
+var CARTAS = [["Equilátero", "lados", "3 lados iguais. Os três ângulos medem 60°, por isso ele é sempre acutângulo."], ["Isósceles", "lados", "2 lados iguais (congruentes) e um terceiro chamado base. Os dois ângulos da base são iguais."], ["Escaleno", "lados", "3 lados diferentes e, por consequência, 3 ângulos diferentes."], ["Retângulo", "ângulos", "Tem exatamente um ângulo de 90°. Os outros dois são agudos e somam 90°."], ["Obtusângulo", "ângulos", "Tem um ângulo maior que 90°. Só pode ter um, porque a soma é 180°."], ["Acutângulo", "ângulos", "Tem os três ângulos menores que 90°. Todo equilátero é acutângulo."]];
+var E = { estudei:{}, anot:'', rolagem:0 };
+
+function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+/* cartas que viram */
+var cx = document.getElementById('cartas');
+CARTAS.forEach(function(c,i){
+  var d = document.createElement('div');
+  d.className='flip';
+  d.innerHTML = '<div class="in"><div class="f"><b>'+esc(c[0])+'</b><div class="pequeno">quanto aos '+esc(c[1])+'</div><div class="dica">toque para virar</div></div>'+
+                '<div class="v">'+esc(c[2])+'</div></div>';
+  d.onclick = function(){ d.classList.toggle('virado'); };
+  cx.appendChild(d);
+});
+
+/* checkboxes */
+function pintarEstudei(){
+  var n = 0;
+  SEC.forEach(function(s){
+    var el = document.getElementById('ck-'+s[0]);
+    if(!el) return;
+    el.checked = !!E.estudei[s[0]];
+    if(el.checked) n++;
+  });
+  document.getElementById('barra-estudei').style.width = (n/SEC.length*100)+'%';
+  document.getElementById('txt-estudei').textContent = n+' de '+SEC.length+' partes marcadas como estudadas';
+  RELOGIO.extra({partesEstudadas:n, totalPartes:SEC.length});
+}
+SEC.forEach(function(s){
+  var el = document.getElementById('ck-'+s[0]);
+  if(el) el.onchange = function(){ E.estudei[s[0]] = el.checked; salvarAgora(); pintarEstudei(); };
+});
+
+/* anotações */
+var anot = document.getElementById('anot');
+anot.oninput = function(){ E.anot = anot.value; salvarAgora(); };
+
+/* rolagem máxima */
+function medirRolagem(){
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var p = h > 0 ? Math.min(100, Math.round((window.scrollY / h) * 100)) : 100;
+  if(p > (E.rolagem||0)){ E.rolagem = p; salvarAgora(); }
+  document.getElementById('barra-rolagem').style.width = (E.rolagem||0)+'%';
+  document.getElementById('txt-rolagem').textContent = (E.rolagem||0)+'% do resumo percorrido';
+  RELOGIO.extra({rolagemMax: E.rolagem||0});
+}
+window.addEventListener('scroll', medirRolagem);
+
+painelSalvar(KEY,
+  function(){ return E; },
+  function(sal){ if(sal){ E = Object.assign(E, sal); anot.value = E.anot||''; } },
+  function(){ E = {estudei:{}, anot:'', rolagem:0}; }
+);
+pintarEstudei();
+medirRolagem();
+RELOGIO.init({key:KEY, minutos:45, titulo:'Abrir as cartas de bordo?', aoTerminar:function(){
+  modal('⚓ Estudo encerrado', '<p>Seu tempo foi salvo. As marcações e anotações continuam guardadas.</p>', [{texto:'Ok', classe:'btn-1'}]);
+}});
+</script>
+</body>
+</html>
