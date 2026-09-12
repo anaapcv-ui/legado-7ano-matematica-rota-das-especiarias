@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folha de Regras — Matemática 7º ano</title>
+<style>
+@page{ size: A4 landscape; margin: 8mm; }
+*{box-sizing:border-box}
+body{margin:0; background:#f4e7cd; color:#2b1d10; font-family:Georgia,"Times New Roman",serif; font-size:13px; line-height:1.45}
+header{background:#07242b; color:#f4e7cd; text-align:center; padding:14px 12px 10px; border-bottom:4px solid #c9962f}
+header h1{margin:0; font-size:22px; letter-spacing:.03em}
+header p{margin:4px 0 0; font-size:13px; color:#e6d3ad}
+.grade{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:12px}
+section{border:1.5px solid var(--c); border-radius:10px; overflow:hidden; background:#fffaf0; break-inside:avoid}
+section h2{margin:0; background:var(--c); color:#fff; font-size:15px; padding:7px 10px; text-align:center}
+section .cont{padding:10px 12px}
+section h3{margin:10px 0 4px; font-size:14px; color:var(--c)}
+section p{margin:6px 0}
+.fx{text-align:center; font-weight:bold; color:var(--c); margin:10px 0; font-size:14.5px; background:rgba(0,0,0,.05); border-radius:6px; padding:6px}
+.arm{color:#6b6050; font-size:12px; border-left:3px solid #c9962f; padding-left:8px}
+.tabf{width:100%; border-collapse:collapse; font-size:12px; margin:6px 0}
+.tabf th{background:var(--c); color:#fff; padding:3px 6px}
+.tabf td{border:1px solid rgba(0,0,0,.15); padding:2px 6px; text-align:center}
+footer{background:#07242b; color:#f4e7cd; text-align:center; font-size:12px; padding:10px; border-top:3px solid #c9962f}
+footer b{color:#f0c667}
+.imprimir{text-align:center; padding:10px}
+.imprimir button{font-family:system-ui,sans-serif; font-size:15px; padding:10px 22px; border:none; border-radius:10px; background:#07242b; color:#f4e7cd; cursor:pointer}
+.voltar{display:block; text-align:center; padding:6px; font-family:system-ui,sans-serif; font-size:14px; color:#5b3a1f}
+@media print{ .imprimir,.voltar{display:none} body{background:#fff} }
+@media(max-width:760px){ .grade{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header>
+  <h1>FOLHA DE REGRAS — MATEMÁTICA — 7º ANO</h1>
+  <p>Rota das Especiarias · Regra de três · Matemática financeira · Triângulos · prova de 17/09</p>
+</header>
+<div class="imprimir"><button onclick="window.print()">Imprimir esta folha (A4 deitado)</button></div>
+<a class="voltar" href="index.html">← voltar ao início do kit</a>
+<div class="grade"><section style="--c:#1d5876"><h2>1. Regra de três</h2><div class="cont">
+<div class="fx">a/b = c/d &nbsp;⇒&nbsp; a · d = b · c</div>
+<h3>Os 3 passos, sempre nesta ordem</h3>
+<p><b>1)</b> organizar os dados numa tabela (e conferir as unidades)<br>
+<b>2)</b> perguntar: é DP ou IP?<br>
+<b>3)</b> montar a proporção e resolver</p>
+<h3>DP — diretamente proporcionais</h3>
+<p>Uma sobe, a outra sobe. Monta-se <b>na ordem</b> em que os valores aparecem.<br>
+Ex.: tinta e área, distância e gasolina, quantidade e preço.</p>
+<h3>IP — inversamente proporcionais</h3>
+<p>Uma sobe, a outra desce. <b>Inverte-se a SEGUNDA razão.</b><br>
+Ex.: velocidade e tempo, trabalhadores e dias, torneiras e tempo.<br>
+Atalho: em IP o <b>produto de cada linha é igual</b>.</p>
+<h3>Modelos prontos</h3>
+<p>2 latas → 3 m² ; x latas → 19,5 m² &nbsp;⇒&nbsp; <b>13 latas</b><br>
+4 pintores → 15 dias ; 6 pintores &nbsp;⇒&nbsp; <b>10 dias</b><br>
+90 km/h → 4 h ; 120 km/h &nbsp;⇒&nbsp; <b>3 h</b><br>
+50 L → 20 min ; 600 L &nbsp;⇒&nbsp; 240 min = <b>4 horas</b><br>
+42 L → 504 km ; 144 km &nbsp;⇒&nbsp; <b>12 litros</b></p>
+<p class="arm"><b>Armadilha:</b> unidade. 4 min 30 s = 4,5 min (não 4,30). 90 dias = 3 meses.
+1 trimestre = 3 meses. Se a pergunta pede horas, não entregue minutos.</p>
+</div></section><section style="--c:#2f7d5f"><h2>2. Matemática financeira</h2><div class="cont">
+<div class="fx">aumento: × (1 + taxa) &nbsp;|&nbsp; desconto: × (1 − taxa)</div>
+<h3>Tabela de fatores</h3>
+<table class="tabf"><thead><tr><th>Taxa</th><th>Aumento</th><th>Desconto</th></tr></thead><tbody>
+<tr><td>4%</td><td>1,04</td><td>0,96</td></tr>
+<tr><td>8%</td><td>1,08</td><td>0,92</td></tr>
+<tr><td>10%</td><td>1,10</td><td>0,90</td></tr>
+<tr><td>12%</td><td>1,12</td><td>0,88</td></tr>
+<tr><td>15%</td><td>1,15</td><td>0,85</td></tr>
+<tr><td>20%</td><td>1,20</td><td>0,80</td></tr>
+<tr><td>28%</td><td>1,28</td><td>0,72</td></tr>
+<tr><td>30%</td><td>1,30</td><td>0,70</td></tr>
+<tr><td>32%</td><td>1,32</td><td>0,68</td></tr>
+<tr><td>36%</td><td>1,36</td><td>0,64</td></tr>
+<tr><td>40%</td><td>1,40</td><td>0,60</td></tr>
+</tbody></table>
+<p class="arm"><b>Macete:</b> o fator de desconto é o <b>resto para 100</b>. Desconto de 12% → 0,88.</p>
+<div class="fx">J = C · i · t &nbsp;&nbsp;&nbsp; M = C + J</div>
+<h3>Juros simples</h3>
+<p><b>C</b> capital (valor do começo) · <b>i</b> taxa em decimal · <b>t</b> tempo<br>
+<b>J</b> juros (só o extra) · <b>M</b> montante (capital + juros)<br>
+<b>Taxa e tempo na mesma unidade.</b> Taxa ao mês pede tempo em meses.</p>
+<p>R$ 60 000 a 2% a.m. por 8 meses: J = <b>9 600</b>, M = <b>69 600</b><br>
+R$ 9 520 a 2% a.m. por 90 dias (3 meses): J = <b>571,20</b><br>
+R$ 180 500 a 15% a.a. por 1 trimestre: J = <b>6 768,75</b><br>
+R$ 4 000 a 3% a.m. por 36 meses: J = <b>4 320</b></p>
+<p class="arm"><b>Armadilha:</b> a questão quer JUROS ou MONTANTE? O valor do desconto nunca é
+o preço final. Aumentar 10% e depois tirar 10% não volta ao preço de antes.</p>
+</div></section><section style="--c:#a8452b"><h2>3. Triângulos</h2><div class="cont">
+<div class="fx">soma dos ângulos internos = 180°</div>
+<h3>Classificação — sempre DUAS respostas</h3>
+<p><b>Pelos lados:</b> equilátero (3 iguais) · isósceles (2 iguais + base) · escaleno (3 diferentes)<br>
+<b>Pelos ângulos:</b> retângulo (um de 90°) · obtusângulo (um maior que 90°) · acutângulo (todos menores que 90°)</p>
+<p>Equilátero: 60°, 60°, 60° — por isso é sempre acutângulo.<br>
+Isósceles: os <b>ângulos da base são iguais</b> (é daí que sai o x).</p>
+<div class="fx">externo = soma dos dois internos NÃO vizinhos</div>
+<h3>Ângulos</h3>
+<p>externo + interno vizinho = 180°<br>
+Retângulo: os dois ângulos agudos somam 90°<br>
+48° e 67° → terceiro = <b>65°</b> · vértice de 96° → base <b>42°</b> cada</p>
+<div class="fx">|b − c| &lt; a &lt; b + c</div>
+<h3>Condição de existência</h3>
+<p>Cada lado é menor que a soma e maior que a diferença dos outros dois.<br>
+Atalho: some as duas menores; tem que dar mais que a maior.<br>
+Lados 5 e 7 → terceiro entre <b>2 e 12</b> · lados 6 e 10 → entre <b>4 e 16</b></p>
+<p class="arm"><b>Armadilha:</b> achar o x não é achar o ângulo. Depois de encontrar x,
+substitua na expressão para responder o que a questão pediu.</p>
+</div></section></div>
+<footer>
+  <b>ANTES DE ENTREGAR:</b> conferi as unidades? &nbsp;·&nbsp; inverti só a segunda razão nas inversas? &nbsp;·&nbsp;
+  usei o fator certo (desconto = 1 − taxa)? &nbsp;·&nbsp; a questão queria juros ou montante? &nbsp;·&nbsp;
+  classifiquei o triângulo pelos lados E pelos ângulos? &nbsp;·&nbsp; substituí o x para achar o que foi pedido?
+</footer>
+</body>
+</html>
