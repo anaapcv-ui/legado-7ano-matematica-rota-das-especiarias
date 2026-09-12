@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulado — Matemática 7º ano | Rota das Especiarias</title>
+<style>/* ====== ROTA DAS ESPECIARIAS — estilo comum ====== */
+:root{
+  --mar:#07242b; --mar2:#0d3540; --mar3:#12495a;
+  --madeira:#5b3a1f; --madeira2:#7d5230;
+  --ouro:#d9a441; --ouro2:#f0c667;
+  --perg:#f4e7cd; --perg2:#e6d3ad;
+  --canela:#b4552f; --verde:#3f8f6d; --verde2:#5fbf93;
+  --tinta:#2b1d10;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Georgia","Times New Roman",serif;
+  background:var(--mar);
+  background-image:radial-gradient(circle at 12% 8%, rgba(217,164,65,.10), transparent 45%),
+                   radial-gradient(circle at 88% 92%, rgba(63,143,109,.12), transparent 45%);
+  color:var(--perg); line-height:1.65; font-size:17px;
+}
+body.bloqueado > *:not(#capa-relogio){filter:blur(7px); pointer-events:none; user-select:none}
+.wrap{max-width:960px; margin:0 auto; padding:0 18px 80px}
+
+/* cabeçalho */
+header.topo{
+  background:linear-gradient(135deg,var(--mar2),var(--madeira));
+  border-bottom:4px solid var(--ouro); padding:26px 18px 20px; text-align:center;
+}
+header.topo .selo{font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--ouro2)}
+header.topo h1{margin:6px 0 4px; font-size:30px; color:var(--perg)}
+header.topo p.sub{margin:0; color:var(--perg2); font-size:15px}
+
+/* barra do relógio */
+.barra-rel{
+  position:sticky; top:0; z-index:50; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  justify-content:center; background:rgba(7,36,43,.96); border-bottom:1px solid rgba(217,164,65,.35);
+  padding:8px 14px; font-size:14px; font-family:system-ui,sans-serif;
+}
+.barra-rel #rel-tempo{color:var(--ouro2); font-weight:700}
+.barra-rel #rel-restante{color:var(--perg2); opacity:.85}
+#rel-aviso{display:none; width:100%; text-align:center; background:rgba(180,85,47,.25); border-radius:8px; padding:6px; margin-top:4px}
+
+/* navegação */
+nav.abas{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:18px 0 8px}
+nav.abas a{
+  font-family:system-ui,sans-serif; font-size:14px; text-decoration:none; padding:8px 14px; border-radius:999px;
+  color:var(--perg2); border:1px solid rgba(217,164,65,.4); background:rgba(13,53,64,.7);
+}
+nav.abas a.ativo{background:var(--ouro); color:var(--tinta); font-weight:700; border-color:var(--ouro)}
+
+/* cartões */
+.carta{
+  background:linear-gradient(180deg,var(--perg),var(--perg2)); color:var(--tinta);
+  border-radius:14px; padding:20px 22px; margin:18px 0;
+  box-shadow:0 8px 22px rgba(0,0,0,.35); border:1px solid rgba(91,58,31,.35);
+}
+.carta h2{margin:0 0 10px; font-size:22px; color:var(--madeira)}
+.carta h3{margin:16px 0 6px; font-size:18px; color:var(--canela)}
+.carta p{margin:10px 0}
+.escura{background:linear-gradient(180deg,var(--mar2),var(--mar)); color:var(--perg); border-color:rgba(217,164,65,.3)}
+.escura h2,.escura h3{color:var(--ouro2)}
+
+/* post-it e alertas */
+.postit{background:#ffe98a; color:#3a2b06; border-left:7px solid #e0a800; padding:12px 16px; border-radius:8px; margin:14px 0; box-shadow:2px 3px 8px rgba(0,0,0,.2)}
+.pegadinha{background:#fde3d8; color:#5d1f0c; border-left:7px solid var(--canela); padding:12px 16px; border-radius:8px; margin:14px 0}
+.narrador{background:rgba(63,143,109,.18); border-left:7px solid var(--verde); padding:12px 16px; border-radius:8px; margin:14px 0; font-style:italic}
+.formula{background:#10303a; color:var(--ouro2); font-family:"Courier New",monospace; font-size:18px; text-align:center; padding:12px; border-radius:10px; margin:12px 0; border:1px dashed var(--ouro)}
+.carta .formula{background:#2b1d10; color:var(--ouro2)}
+
+/* botões */
+.btn{font-family:system-ui,sans-serif; font-size:15px; padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:600}
+.btn-1{background:var(--ouro); color:var(--tinta)}
+.btn-1:hover{background:var(--ouro2)}
+.btn-2{background:transparent; color:var(--perg2); border:1px solid rgba(217,164,65,.5)}
+.btn-3{background:var(--verde); color:#04231a}
+.btn-grande{font-size:19px; padding:14px 30px}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+
+/* tabelas */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-family:system-ui,sans-serif; font-size:15px}
+th,td{border:1px solid rgba(91,58,31,.3); padding:8px 10px; text-align:left}
+th{background:var(--madeira); color:var(--perg)}
+.escura th{background:var(--mar3)}
+.escura td{border-color:rgba(217,164,65,.25)}
+
+/* campos */
+textarea,input[type=text]{
+  width:100%; font-family:system-ui,sans-serif; font-size:15px; padding:10px; border-radius:8px;
+  border:2px solid rgba(91,58,31,.35); background:#fffdf6; color:var(--tinta); resize:vertical;
+}
+textarea:focus,input[type=text]:focus{outline:none; border-color:var(--canela)}
+.perg{margin:16px 0; padding:14px; border-radius:10px; background:rgba(255,255,255,.45); border:1px solid rgba(91,58,31,.2)}
+.perg.vermelha{background:#ffe2dd; border:2px solid #c0392b}
+.perg .enun{font-weight:700; margin-bottom:8px}
+.aviso-copia{background:#fff4cc; border-left:6px solid #e0a800; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#4a3806}
+.aviso-vermelho{background:#ffd9d2; border-left:6px solid #c0392b; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#7d1f12}
+.modelo{background:#e8f5ee; border-left:6px solid var(--verde); padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:15px; color:#123a2b}
+.checklist{font-family:system-ui,sans-serif; font-size:14px; margin-top:8px}
+.checklist .item{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0}
+.checklist .item span{flex:1; min-width:180px}
+.mini{font-size:13px; padding:5px 12px; border-radius:8px; border:1px solid rgba(91,58,31,.4); background:#fff; cursor:pointer; font-family:system-ui,sans-serif}
+.mini.on-sim{background:var(--verde); color:#fff; border-color:var(--verde)}
+.mini.on-nao{background:var(--canela); color:#fff; border-color:var(--canela)}
+
+/* blocos */
+.bloco{margin:22px 0}
+.bloco.trancado .corpo{display:none}
+.bloco .cabeca{display:flex; gap:10px; align-items:center; cursor:pointer}
+.bloco .num{background:var(--ouro); color:var(--tinta); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex:none}
+.bloco.trancado .num{background:#6c6250; color:#ddd}
+.bloco .status{margin-left:auto; font-size:13px; font-family:system-ui,sans-serif}
+
+/* fixação */
+.fix{margin:10px 0; padding:12px; border-radius:10px; background:rgba(43,29,16,.07); border:1px solid rgba(91,58,31,.25)}
+.fix .alt{display:block; margin:6px 0; padding:8px 12px; border-radius:8px; background:#fffdf6; border:1px solid rgba(91,58,31,.25); cursor:pointer; font-family:system-ui,sans-serif; font-size:15px}
+.fix .alt:hover{background:#fff6e0}
+.fix .alt.escolhida{border-color:var(--canela); background:#ffeede}
+.fix .alt.certa{background:#d6f0e0; border-color:var(--verde)}
+.fix .alt.errada{background:#efe7e4; border-color:#999; opacity:.75}
+.barra{height:12px; background:rgba(0,0,0,.2); border-radius:999px; overflow:hidden; margin:10px 0}
+.barra div{height:100%; background:linear-gradient(90deg,var(--verde),var(--ouro)); width:0; transition:width .4s}
+
+/* capa do relógio */
+.capa-relogio{position:fixed; inset:0; z-index:200; background:rgba(7,36,43,.97); display:flex; align-items:center; justify-content:center; padding:20px}
+.capa-cx{max-width:520px; text-align:center; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:18px; padding:34px 26px}
+.capa-icone{font-size:54px}
+.capa-cx h2{color:var(--ouro2); margin:8px 0 12px}
+.capa-cx p{color:var(--perg2); font-size:16px}
+
+/* modais */
+.modal-bg{position:fixed; inset:0; background:rgba(4,18,22,.85); display:flex; align-items:center; justify-content:center; z-index:300; padding:20px}
+.modal-cx{max-width:520px; width:100%; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:16px; padding:24px}
+.modal-cx h3{margin:0 0 10px; color:var(--ouro2)}
+.modal-corpo{color:var(--perg2); font-size:16px}
+.modal-pe{display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap}
+.pausa-relogio{font-size:34px; text-align:center; color:var(--ouro2); font-family:"Courier New",monospace}
+
+/* painel salvar */
+.painel{background:rgba(13,53,64,.85); border:1px solid rgba(217,164,65,.35); border-radius:12px; padding:14px; margin:22px 0; font-family:system-ui,sans-serif; font-size:14px; text-align:center}
+.painel .linha{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+.painel textarea{min-height:120px; margin-top:10px}
+
+/* rodapé de navegação */
+.proximo{text-align:center; margin:32px 0 10px}
+.proximo a{display:inline-block; background:var(--verde); color:#04231a; text-decoration:none; padding:14px 26px; border-radius:12px; font-family:system-ui,sans-serif; font-weight:700}
+
+/* utilitários */
+.centro{text-align:center}
+.pequeno{font-size:14px}
+.oculto{display:none}
+.selo-ok{color:var(--verde2)} .selo-rev{color:#ffb26b}
+ul.limpa{padding-left:20px} ul.limpa li{margin:6px 0}
+@media(max-width:520px){
+  body{font-size:16px}
+  header.topo h1{font-size:24px}
+  .carta{padding:16px}
+}
+
+header.topo.sim{background:linear-gradient(135deg,#0b2a3d,#123a56); border-bottom:5px solid #b4462f}
+.qcx{background:linear-gradient(180deg,var(--perg),var(--perg2)); color:var(--tinta); border-radius:14px; padding:18px 20px; margin:16px 0; border:1px solid rgba(91,58,31,.35)}
+.qcx .cabq{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px}
+.qcx .qn{background:#0b2a3d; color:#fff; border-radius:8px; padding:3px 10px; font-family:system-ui,sans-serif; font-size:14px; font-weight:700}
+.qcx .badge{font-family:system-ui,sans-serif; font-size:12px; padding:3px 10px; border-radius:999px; background:#e3d6b8; color:#5b3a1f}
+.qcx .badge.t-som{background:#ffd9a8} .qcx .badge.t-rom{background:#cfe3ff} .qcx .badge.t-disc{background:#ffd3cc}
+.qcx .pontos{margin-left:auto; font-family:system-ui,sans-serif; font-size:13px; opacity:.7}
+.qcx ol.afirm{margin:8px 0 12px 0; padding-left:26px}
+.qcx ol.afirm li{margin:4px 0}
+.somitem{display:flex; gap:10px; align-items:flex-start; margin:8px 0; background:#fffdf6; border:1px solid rgba(91,58,31,.25); border-radius:8px; padding:8px 12px; cursor:pointer}
+.somitem input{margin-top:4px; width:18px; height:18px}
+.somitem .val{font-weight:700; font-family:system-ui,sans-serif; color:#0b2a3d}
+.somatotal{text-align:center; font-family:system-ui,sans-serif; font-size:16px; margin-top:8px}
+.somatotal b{font-size:22px; color:#b4462f}
+.barra-topo{position:sticky; top:44px; z-index:40; background:rgba(11,42,61,.96); padding:6px 12px; font-family:system-ui,sans-serif; font-size:14px; text-align:center; border-bottom:1px solid rgba(180,70,47,.6)}
+.codigo{font-family:"Courier New",monospace; font-size:30px; letter-spacing:3px; color:var(--ouro2); text-align:center; margin:12px 0}
+.res-certa{background:#d6f0e0 !important; border-color:#3f8f6d !important}
+.res-errada{background:#e9e4e0 !important; border-color:#999 !important; opacity:.8}
+.gab-expl{background:#eef4ff; border-left:6px solid #0b2a3d; padding:10px 14px; border-radius:8px; margin-top:10px; font-family:system-ui,sans-serif; font-size:15px}
+.btn-vermelho{background:#b4462f; color:#fff}
+.btn-vermelho:hover{background:#cc563c}
+</style>
+</head>
+<body>
+<header class="topo sim">
+  <div class="selo">⚓ Rota das Especiarias · Matemática 7º ano</div>
+  <h1>📝 Simulado — 28 questões</h1>
+  <p class="sub">Regra de três · Matemática financeira · Triângulos</p>
+</header>
+
+<div class="barra-rel">
+  <span id="rel-tempo">⏱️ 0min 00s</span>
+  <span id="rel-restante">parado</span>
+  <button class="btn btn-2" id="btn-terminar" style="padding:4px 12px;font-size:13px">⏹ Terminar agora</button>
+  <div id="rel-aviso"></div>
+</div>
+<div class="barra-topo"><span id="contador">0 de 28 respondidas</span> <span id="codigo-topo"></span></div>
+
+<div class="wrap">
+  <nav class="abas">
+    <a href="index.html">🏠 Início</a>
+    <a href="leitura.html">📖 Leitura</a>
+    <a href="resumo.html">🗺️ Resumo</a>
+    <a class="ativo" href="simulado.html">📝 Simulado</a>
+  </nav>
+
+  <div class="carta escura">
+    <h2>Instruções de bordo</h2>
+    <ul class="limpa">
+      <li>São <b>28 questões</b>: 22 de múltipla escolha, 3 de afirmativas (I, II, III, IV), 2 de somatório e 1 discursiva.</li>
+      <li>Responda <b>todas</b> antes de enviar. Depois de enviar, as respostas <b>travam</b>.</li>
+      <li>Ao enviar, aparece um <b>código de liberação</b>. Entregue o código para a sua mãe ou responsável: é com ele que o gabarito comentado abre.</li>
+      <li>A questão discursiva não entra na contagem automática — ela é corrigida pelo responsável com a resposta modelo.</li>
+    </ul>
+  </div>
+
+  <div id="questoes"></div>
+
+  <div class="centro" style="margin:26px 0">
+    <button class="btn btn-vermelho btn-grande" id="enviar">✅ Enviar respostas</button>
+  </div>
+
+  <div id="resultado" class="oculto"></div>
+
+  <div id="area-gabarito" class="oculto">
+    <div class="carta escura">
+      <h2>🔐 Gabarito comentado</h2>
+      <p>Para abrir, digite o código que apareceu na tela do jovem aprendiz:</p>
+      <input type="text" id="cod-input" placeholder="SIM-00-XX" style="max-width:240px">
+      <div style="margin-top:10px"><button class="btn btn-1" id="btn-abrir">Abrir gabarito</button></div>
+      <div id="erro-cod"></div>
+    </div>
+    <div id="gabarito" class="oculto"></div>
+  </div>
+
+  <div class="proximo"><a href="index.html">← Voltar ao início do kit</a></div>
+
+  <div class="painel">
+    <div>💾 Salvamento automático — <span id="salvo-quando">ainda não salvo</span></div>
+    <div class="linha">
+      <button class="btn btn-2" onclick="exportarTudo()">📥 Exportar</button>
+      <button class="btn btn-2" onclick="importarTudo()">📤 Importar</button>
+      <button class="btn btn-2" onclick="zerarTudo()">🗑️ Zerar tudo</button>
+    </div>
+    <div id="caixa-export" style="display:none"><p class="pequeno">Copie este texto e guarde num arquivo:</p><textarea readonly></textarea></div>
+    <div id="caixa-import" style="display:none"><p class="pequeno">Cole aqui o texto do backup:</p><textarea id="area-import"></textarea>
+      <button class="btn btn-1" onclick="confirmarImport()">Restaurar</button></div>
+  </div>
+</div>
+
+<script>
+/* ====== NÚCLEO COMUM — Rota das Especiarias (kit 7º ano Matemática) ====== */
+/* Armazenamento seguro (não quebra se o navegador bloquear) */
+var MEM = {};
+var Store = {
+  get: function (k) {
+    try { var v = localStorage.getItem(k); return v === null ? (MEM[k] === undefined ? null : MEM[k]) : v; }
+    catch (e) { return MEM[k] === undefined ? null : MEM[k]; }
+  },
+  set: function (k, v) {
+    MEM[k] = v;
+    try { localStorage.setItem(k, v); } catch (e) { }
+  },
+  del: function (k) {
+    delete MEM[k];
+    try { localStorage.removeItem(k); } catch (e) { }
+  },
+  getJSON: function (k, def) { var v = this.get(k); if (!v) return def; try { return JSON.parse(v); } catch (e) { return def; } },
+  setJSON: function (k, o) { this.set(k, JSON.stringify(o)); }
+};
+
+/* Modal desenhado na página (nunca alert/confirm/prompt) */
+function modal(titulo, corpoHTML, botoes) {
+  var velho = document.getElementById('modal-bg');
+  if (velho) velho.remove();
+  var bg = document.createElement('div');
+  bg.id = 'modal-bg';
+  bg.className = 'modal-bg';
+  var cx = document.createElement('div');
+  cx.className = 'modal-cx';
+  cx.innerHTML = '<h3>' + titulo + '</h3><div class="modal-corpo">' + corpoHTML + '</div>';
+  var pe = document.createElement('div');
+  pe.className = 'modal-pe';
+  (botoes || [{ texto: 'Fechar' }]).forEach(function (b) {
+    var bt = document.createElement('button');
+    bt.className = 'btn ' + (b.classe || 'btn-2');
+    bt.textContent = b.texto;
+    bt.onclick = function () { bg.remove(); if (b.acao) b.acao(); };
+    pe.appendChild(bt);
+  });
+  cx.appendChild(pe);
+  bg.appendChild(cx);
+  document.body.appendChild(bg);
+  return bg;
+}
+
+/* ====== RELÓGIO DE ESTUDO ====== */
+var RELOGIO = (function () {
+  var KEY = '', MIN_SESSAO = 45, INAT = 180000, PAUSA = 300000;
+  var d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} };
+  var sessaoMs = 0, rodando = false, travado = false, ultimaAtiv = Date.now(), pausadoInat = false;
+  var elTempo, elAviso, timer, fimPausa = 0, inicioSessao = null;
+
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000), m = Math.floor(s / 60), h = Math.floor(m / 60);
+    m = m % 60; s = s % 60;
+    return (h > 0 ? h + 'h ' : '') + m + 'min ' + (s < 10 ? '0' : '') + s + 's';
+  }
+  function salvar() {
+    d.extra = d.extra || {};
+    Store.setJSON(KEY + '_tempo', d);
+  }
+  function pintar() {
+    if (!elTempo) return;
+    elTempo.textContent = '⏱️ ' + fmt(d.ativoMs);
+    var restante = MIN_SESSAO * 60000 - sessaoMs;
+    var elRest = document.getElementById('rel-restante');
+    if (elRest) elRest.textContent = travado ? 'pausa obrigatória' : (rodando ? 'faltam ' + Math.max(0, Math.ceil(restante / 60000)) + ' min nesta sessão' : 'parado');
+  }
+  function marcarAtividade() {
+    ultimaAtiv = Date.now();
+    if (pausadoInat) { pausadoInat = false; esconderAviso(); }
+  }
+  function mostrarAviso(html) {
+    if (!elAviso) return;
+    elAviso.innerHTML = html;
+    elAviso.style.display = 'block';
+  }
+  function esconderAviso() { if (elAviso) elAviso.style.display = 'none'; }
+
+  function tick() {
+    if (!rodando) return;
+    var agora = Date.now();
+    if (travado) {
+      var falta = fimPausa - agora;
+      if (falta <= 0) { destravar(); }
+      else {
+        var mm = Math.floor(falta / 60000), ss = Math.floor((falta % 60000) / 1000);
+        var el = document.getElementById('pausa-contagem');
+        if (el) el.textContent = mm + ':' + (ss < 10 ? '0' : '') + ss;
+      }
+      return;
+    }
+    d.totalMs += 1000;
+    if (agora - ultimaAtiv < INAT) {
+      d.ativoMs += 1000;
+      sessaoMs += 1000;
+    } else if (!pausadoInat) {
+      pausadoInat = true;
+      mostrarAviso('😴 <b>Estudo pausado</b> — toque na tela para continuar.');
+    }
+    if (sessaoMs >= MIN_SESSAO * 60000) travar();
+    if (d.totalMs % 10000 === 0) salvar();
+    pintar();
+  }
+
+  function travar() {
+    travado = true; sessaoMs = 0; fimPausa = Date.now() + PAUSA;
+    var bg = document.createElement('div');
+    bg.id = 'pausa-bg'; bg.className = 'modal-bg';
+    bg.innerHTML = '<div class="modal-cx"><h3>⚓ Hora de ancorar!</h3><div class="modal-corpo">' +
+      '<p>Você estudou <b>' + MIN_SESSAO + ' minutos</b> seguidos. Agora é pausa obrigatória de 5 minutos.</p>' +
+      '<p>Levante, beba água, olhe pela janela. O material volta sozinho.</p>' +
+      '<p class="pausa-relogio">⏳ <span id="pausa-contagem">5:00</span></p></div></div>';
+    document.body.appendChild(bg);
+    salvar();
+  }
+  function destravar() {
+    travado = false;
+    var bg = document.getElementById('pausa-bg');
+    if (bg) bg.remove();
+    marcarAtividade();
+  }
+
+  function comecar() {
+    var capa = document.getElementById('capa-relogio');
+    if (capa) capa.remove();
+    document.body.classList.remove('bloqueado');
+    rodando = true; inicioSessao = new Date().toISOString();
+    marcarAtividade();
+    if (!timer) timer = setInterval(tick, 1000);
+    pintar();
+  }
+
+  function terminar(cb) {
+    modal('⏹ Terminar agora?', '<p>Quer encerrar o estudo agora? O tempo é salvo e, no quiz ou simulado, a tentativa é <b>fechada como está</b> — mesmo com questões em branco.</p>',
+      [{ texto: 'Continuar estudando', classe: 'btn-2' },
+      {
+        texto: 'Sim, terminar', classe: 'btn-1', acao: function () {
+          rodando = false;
+          if (inicioSessao) { d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() }); inicioSessao = null; }
+          salvar(); pintar();
+          if (cb) cb();
+        }
+      }]);
+  }
+
+  return {
+    init: function (opts) {
+      KEY = opts.key;
+      MIN_SESSAO = opts.minutos || 45;
+      d = Store.getJSON(KEY + '_tempo', { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} });
+      d.sessoes = d.sessoes || []; d.extra = d.extra || {};
+      elTempo = document.getElementById('rel-tempo');
+      elAviso = document.getElementById('rel-aviso');
+      document.body.classList.add('bloqueado');
+      var capa = document.createElement('div');
+      capa.id = 'capa-relogio';
+      capa.className = 'capa-relogio';
+      capa.innerHTML = '<div class="capa-cx"><div class="capa-icone">⏱️</div><h2>' + (opts.titulo || 'Pronto para zarpar?') + '</h2>' +
+        '<p>O relógio de estudo conta quanto tempo você estudou de verdade. Cada viagem dura <b>' + MIN_SESSAO + ' minutos</b>, depois vem uma pausa de 5 minutos.</p>' +
+        '<button class="btn btn-1 btn-grande" id="btn-comecar">⛵ Começar a estudar</button></div>';
+      document.body.appendChild(capa);
+      document.getElementById('btn-comecar').onclick = comecar;
+      ['click', 'keydown', 'scroll', 'touchstart', 'input'].forEach(function (ev) {
+        document.addEventListener(ev, marcarAtividade, true);
+      });
+      window.addEventListener('beforeunload', function () {
+        if (inicioSessao) d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() });
+        salvar();
+      });
+      pintar();
+      var bt = document.getElementById('btn-terminar');
+      if (bt) bt.onclick = function () { terminar(opts.aoTerminar); };
+    },
+    extra: function (obj) { d.extra = Object.assign(d.extra || {}, obj); salvar(); },
+    dados: function () { return d; },
+    zerar: function () { d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} }; sessaoMs = 0; salvar(); pintar(); },
+    fmt: fmt,
+    _debug: function (o) { if (o && o.restante !== undefined) sessaoMs = MIN_SESSAO * 60000 - o.restante * 1000; if (o && o.inat !== undefined) ultimaAtiv = Date.now() - o.inat * 1000; if (o && o.pausa !== undefined) fimPausa = Date.now() + o.pausa * 1000; },
+    _tick: tick,
+    _comecar: comecar,
+    _travado: function(){ return travado; },
+    _sessao: function(){ return sessaoMs; }
+  };
+})();
+
+/* ====== ANTICÓPIA ====== */
+var Anticopia = (function () {
+  function norm(t) {
+    return (t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function pal(t) { var n = norm(t); return n ? n.split(' ') : []; }
+  /* marca as palavras de A que estão em sequências comuns com B de tamanho >= min */
+  function marcar(a, b, min) {
+    var marcas = new Array(a.length).fill(0), maior = 0;
+    var prev = new Array(b.length + 1).fill(0);
+    for (var i = 0; i < a.length; i++) {
+      var cur = new Array(b.length + 1).fill(0);
+      for (var j = 0; j < b.length; j++) {
+        if (a[i] === b[j]) {
+          cur[j + 1] = prev[j] + 1;
+          if (cur[j + 1] > maior) maior = cur[j + 1];
+          if (cur[j + 1] >= min) {
+            for (var k = 0; k < cur[j + 1]; k++) marcas[i - k] = 1;
+          }
+        }
+      }
+      prev = cur;
+    }
+    return { marcas: marcas, maior: maior };
+  }
+  return {
+    /* true = a resposta é transcrição do texto do bloco */
+    ehCopia: function (resposta, textoBloco, pergunta) {
+      var r = pal(resposta);
+      if (r.length < 6) return false;
+      var citacao = marcar(r, pal(pergunta || ''), 4).marcas;
+      var livres = [], mapa = [];
+      for (var i = 0; i < r.length; i++) { if (!citacao[i]) { livres.push(r[i]); mapa.push(i); } }
+      if (livres.length < 6) return false;
+      var t = pal(textoBloco);
+      var m8 = marcar(livres, t, 8);
+      if (m8.maior >= 8) return true;
+      var m5 = marcar(livres, t, 5);
+      var soma = m5.marcas.reduce(function (x, y) { return x + y; }, 0);
+      return (soma / livres.length) > 0.6;
+    },
+    _norm: norm
+  };
+})();
+
+/* ====== PAINEL DE SALVAMENTO ====== */
+function painelSalvar(KEY, coletar, restaurar, aoZerar) {
+  function carimbo() {
+    var q = Store.get(KEY + '_quando');
+    var el = document.getElementById('salvo-quando');
+    if (el) el.textContent = q ? 'último salvamento: ' + q : 'ainda não salvo';
+  }
+  window.salvarAgora = function () {
+    Store.setJSON(KEY, coletar());
+    Store.set(KEY + '_quando', new Date().toLocaleString('pt-BR'));
+    carimbo();
+  };
+  window.exportarTudo = function () {
+    var pacote = { chave: KEY, dados: Store.getJSON(KEY, {}), tempo: Store.getJSON(KEY + '_tempo', {}), quando: Store.get(KEY + '_quando') };
+    var txt = JSON.stringify(pacote, null, 2);
+    var cx = document.getElementById('caixa-export');
+    cx.style.display = 'block';
+    cx.querySelector('textarea').value = txt;
+    cx.querySelector('textarea').select();
+  };
+  window.importarTudo = function () {
+    var cx = document.getElementById('caixa-import');
+    cx.style.display = 'block';
+  };
+  window.confirmarImport = function () {
+    var txt = document.getElementById('area-import').value;
+    try {
+      var p = JSON.parse(txt);
+      if (p.dados) Store.setJSON(KEY, p.dados);
+      if (p.tempo) Store.setJSON(KEY + '_tempo', p.tempo);
+      if (p.quando) Store.set(KEY + '_quando', p.quando);
+      modal('✅ Importado', '<p>Os dados voltaram. A página vai recarregar.</p>', [{ texto: 'Ok', classe: 'btn-1', acao: function () { location.reload(); } }]);
+    } catch (e) {
+      modal('❌ Não deu', '<p>Esse texto não parece um arquivo de backup válido.</p>', [{ texto: 'Ok', classe: 'btn-1' }]);
+    }
+  };
+  window.zerarTudo = function () {
+    modal('🗑️ Zerar tudo?', '<p>Isso apaga todas as respostas <b>e o tempo de estudo</b> deste material. Não dá para desfazer.</p>',
+      [{ texto: 'Cancelar', classe: 'btn-2' },
+      {
+        texto: 'Sim, apagar', classe: 'btn-1', acao: function () {
+          Store.del(KEY); Store.del(KEY + '_quando'); Store.del(KEY + '_tempo');
+          if (aoZerar) aoZerar();
+          location.reload();
+        }
+      }]);
+  };
+  carimbo();
+  if (restaurar) restaurar(Store.getJSON(KEY, null));
+  setInterval(function () { window.salvarAgora(); }, 15000);
+}
+
+
+var D = {"q": [{"n": 1, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Uma máquina produz 180 peças em 4 horas. Mantendo o mesmo ritmo, quantas peças ela produz em 7 horas?", "alts": ["360 peças", "245 peças", "280 peças", "315 peças"], "certa": 3, "expl": "Grandezas DP. 180/4 = 45 peças por hora; 45 · 7 = 315 peças. Também dá para montar 180/x = 4/7 → 4x = 1 260 → x = 315."}, {"n": 2, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Seis operários levantam um muro em 12 dias. Quantos operários são necessários para levantar o mesmo muro em 8 dias?", "alts": ["4 operários", "9 operários", "16 operários", "18 operários"], "certa": 1, "expl": "Menos dias exige mais gente: IP. 6 · 12 = x · 8 → 72 = 8x → x = 9 operários."}, {"n": 3, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Na proporção 3/7 = x/42, o valor de x é:", "alts": ["18", "98", "14", "21"], "certa": 0, "expl": "Multiplicando em cruz: 7x = 3 · 42 = 126, logo x = 126 ÷ 7 = 18."}, {"n": 4, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Um carro a 60 km/h faz um trajeto em 1 hora e 30 minutos. Aumentando a velocidade para 90 km/h, o tempo do mesmo trajeto passa a ser:", "alts": ["45 minutos", "1 hora e 15 minutos", "1 hora", "2 horas e 15 minutos"], "certa": 2, "expl": "Velocidade e tempo são IP. 1 h 30 min = 1,5 h. Então 60 · 1,5 = 90 · x → 90 = 90x → x = 1 hora."}, {"n": 5, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Oito impressoras iguais imprimem um lote em 5 dias. Com 10 impressoras, mantendo o mesmo ritmo, o lote fica pronto em:", "alts": ["6,25 dias", "2 dias", "4 dias", "3 dias"], "certa": 2, "expl": "Mais impressoras, menos dias: IP. 8 · 5 = 10 · x → 40 = 10x → x = 4 dias."}, {"n": 6, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Uma torneira enche um tanque com 1 200 litros em 40 minutos. Mantendo a mesma vazão, quantos litros ela despeja em 1 hora e 10 minutos?", "alts": ["1 680 litros", "1 800 litros", "2 400 litros", "2 100 litros"], "certa": 3, "expl": "1 h 10 min = 70 min. DP: 1 200/40 = 30 litros por minuto; 30 · 70 = 2 100 litros. A pegadinha é esquecer de converter para minutos."}, {"n": 7, "tipo": "mc", "cap": "Cap. 07 — Regra de três", "enun": "Qual dos pares abaixo é formado por grandezas INVERSAMENTE proporcionais?", "alts": ["Número de torneiras iguais e tempo para encher uma piscina", "Quantidade de farinha e número de pães produzidos", "Número de canetas e preço total da compra", "Distância percorrida e gasolina consumida"], "certa": 0, "expl": "Mais torneiras abertas significa menos tempo para encher: uma cresce e a outra diminui. Nos outros três pares as grandezas crescem juntas."}, {"n": 8, "tipo": "rom", "cap": "Cap. 07 — Regra de três", "enun": "Analise as afirmativas a seguir sobre regra de três:", "alts": ["Apenas I, III e IV estão corretas", "Apenas I e II estão corretas", "Apenas II e III estão corretas", "I, II, III e IV estão corretas"], "certa": 0, "expl": "I é a definição de DP e IV é a regra das unidades, ambas corretas. III é o atalho do produto constante em IP. II é falsa: inverte-se apenas a SEGUNDA razão — inverter as duas equivale a não inverter nenhuma.", "afirm": ["Em grandezas diretamente proporcionais, a razão entre os valores correspondentes é sempre a mesma.", "Numa regra de três inversa, devemos inverter as duas razões.", "Em grandezas inversamente proporcionais, o produto dos valores correspondentes é sempre o mesmo.", "As grandezas devem estar na mesma unidade antes de a proporção ser montada."]}, {"n": 9, "tipo": "som", "cap": "Cap. 07 — Regra de três", "enun": "Um automóvel percorre 504 km consumindo 42 litros de gasolina. Analise as afirmativas, some os números correspondentes às CORRETAS e marque a soma.", "itens": [[1, "As grandezas distância percorrida e gasolina consumida são diretamente proporcionais.", true], [2, "O automóvel percorre 12 km com cada litro de gasolina.", true], [4, "Para percorrer 144 km serão necessários 14 litros.", false], [8, "Para percorrer 756 km serão necessários 63 litros.", true], [16, "Se a distância dobrar, o consumo de gasolina cai pela metade.", false]], "soma": 11, "expl": "Corretas: 01 (mais distância, mais gasolina), 02 (504 ÷ 42 = 12 km/L) e 08 (756 ÷ 12 = 63 L). Soma = 11. A 04 é falsa porque 144 ÷ 12 = 12 litros, e a 16 é falsa porque em DP o consumo também dobra."}, {"n": 10, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Uma camiseta que custa R$ 60,00 sofrerá um acréscimo de 15%. O novo preço será:", "alts": ["R$ 75,00", "R$ 9,00", "R$ 51,00", "R$ 69,00"], "certa": 3, "expl": "60 · 1,15 = 69. Ou: 15% de 60 = 9, e 60 + 9 = R$ 69,00. O valor R$ 9,00 é só o acréscimo."}, {"n": 11, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Um notebook anunciado por R$ 2 400,00 tem 18% de desconto para pagamento à vista. O preço à vista é:", "alts": ["R$ 432,00", "R$ 1 968,00", "R$ 2 832,00", "R$ 1 872,00"], "certa": 1, "expl": "2 400 · 0,82 = 1 968. O valor R$ 432,00 é apenas o desconto, e R$ 2 832,00 seria um aumento de 18%."}, {"n": 12, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "O fator de multiplicação usado para dar um desconto de 35% em um preço é:", "alts": ["1,35", "0,35", "0,65", "3,5"], "certa": 2, "expl": "No desconto, tira-se a taxa de 1: 100% − 35% = 65% = 0,65. O fator 1,35 serviria para um aumento de 35%."}, {"n": 13, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Um produto que custa R$ 200,00 sofre um aumento de 20% e, depois, um desconto de 20% sobre o novo preço. O preço final é:", "alts": ["R$ 192,00", "R$ 208,00", "R$ 160,00", "R$ 200,00"], "certa": 0, "expl": "200 · 1,20 = 240 e 240 · 0,80 = 192. Não volta aos R$ 200,00 porque o desconto foi calculado sobre R$ 240,00, um valor maior."}, {"n": 14, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Ana Maria recebe um salário de R$ 2 700,00. Marcos, que trabalha na mesma empresa, recebe 28% a menos que ela. O salário de Marcos é:", "alts": ["R$ 1 944,00", "R$ 2 672,00", "R$ 756,00", "R$ 3 456,00"], "certa": 0, "expl": "2 700 · 0,72 = 1 944. O valor R$ 756,00 é a diferença (28% de 2 700), e R$ 3 456,00 seria 28% a mais."}, {"n": 15, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Um capital de R$ 8 000,00 é aplicado a juros simples, com taxa de 1,5% ao mês, durante 10 meses. Os juros produzidos são:", "alts": ["R$ 120,00", "R$ 9 200,00", "R$ 1 200,00", "R$ 12 000,00"], "certa": 2, "expl": "J = C · i · t = 8 000 · 0,015 · 10 = 1 200. O valor R$ 9 200,00 seria o montante, e não os juros."}, {"n": 16, "tipo": "mc", "cap": "Cap. 08 — Matemática financeira", "enun": "Uma dívida de R$ 5 000,00 foi contratada a juros simples de 2% ao mês. Qual é o montante da dívida depois de 1 ano?", "alts": ["R$ 5 100,00", "R$ 6 200,00", "R$ 6 000,00", "R$ 1 200,00"], "certa": 1, "expl": "1 ano = 12 meses. J = 5 000 · 0,02 · 12 = 1 200. M = C + J = 5 000 + 1 200 = R$ 6 200,00. Quem marcou R$ 1 200,00 parou nos juros."}, {"n": 17, "tipo": "rom", "cap": "Cap. 08 — Matemática financeira", "enun": "Analise as afirmativas a seguir sobre juros simples:", "alts": ["Apenas I e IV estão corretas", "Apenas I, II e III estão corretas", "Apenas II e III estão corretas", "I, II, III e IV estão corretas"], "certa": 1, "expl": "I e II são as definições de montante e de juros simples. III está certa porque 24% ÷ 12 = 2% ao mês. IV é falsa: taxa e tempo precisam estar sempre na mesma unidade.", "afirm": ["O montante é a soma do capital com os juros.", "Em juros simples, os juros são sempre calculados sobre o capital inicial.", "Uma taxa de 24% ao ano equivale a 2% ao mês.", "Se a taxa é mensal, o tempo pode ser usado em anos sem nenhuma conversão."]}, {"n": 18, "tipo": "som", "cap": "Cap. 08 — Matemática financeira", "enun": "Um tênis custa R$ 250,00. Analise as afirmativas, some os números correspondentes às CORRETAS e marque a soma.", "itens": [[1, "Com 10% de desconto, ele sai por R$ 225,00.", true], [2, "Com um acréscimo de 12%, ele passa a custar R$ 280,00.", true], [4, "Um desconto de 40% faz o preço cair para R$ 150,00.", true], [8, "O fator de multiplicação para um desconto de 10% é 0,10.", false], [16, "Aumentar 10% e depois dar 10% de desconto devolve o preço de R$ 250,00.", false]], "soma": 7, "expl": "Corretas: 01 (250 · 0,90 = 225), 02 (250 · 1,12 = 280) e 04 (250 · 0,60 = 150). Soma = 7. A 08 é falsa porque o fator de desconto de 10% é 0,90. A 16 é falsa: 250 · 1,10 · 0,90 = R$ 247,50."}, {"n": 19, "tipo": "disc", "cap": "Cap. 08 — Matemática financeira", "enun": "Alisson comprou móveis para sua casa. À vista, o valor total ficaria em R$ 4 350,00. Como ele decidiu pagar a prazo, em 15 prestações iguais, houve um acréscimo de 36% no valor total. <b>a)</b> Determine o valor total da compra a prazo. <b>b)</b> Determine o valor de cada prestação. Mostre todas as contas.", "modelo": "a) O fator de acréscimo de 36% é 1,36. Então o valor a prazo é 4 350 · 1,36 = R$ 5 916,00. b) Dividindo em 15 prestações iguais: 5 916 ÷ 15 = R$ 394,40 por prestação. (Conferindo: 394,40 · 15 = 5 916,00.)"}, {"n": 20, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Dois ângulos internos de um triângulo medem 48° e 67°. O terceiro ângulo mede:", "alts": ["65°", "75°", "55°", "115°"], "certa": 0, "expl": "A soma dos internos é 180°: 180 − (48 + 67) = 180 − 115 = 65°. Quem marcou 115° parou na soma dos dois primeiros."}, {"n": 21, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Um triângulo tem os três lados medindo 7 cm. Ele é classificado como:", "alts": ["equilátero e acutângulo", "isósceles e retângulo", "equilátero e obtusângulo", "escaleno e acutângulo"], "certa": 0, "expl": "Três lados iguais: equilátero. Seus três ângulos medem 60°, todos menores que 90°, logo é acutângulo."}, {"n": 22, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Um ângulo externo de um triângulo mede 125°. A soma dos dois ângulos internos não adjacentes a ele é:", "alts": ["250°", "125°", "55°", "65°"], "certa": 1, "expl": "Pelo teorema do ângulo externo, ele é igual à soma dos dois internos não adjacentes. O valor 55° é o interno vizinho (180 − 125)."}, {"n": 23, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Num triângulo isósceles, o ângulo do vértice mede 96°. Cada um dos ângulos da base mede:", "alts": ["92°", "48°", "84°", "42°"], "certa": 3, "expl": "Os ângulos da base são iguais e somam 180 − 96 = 84°. Então cada um mede 84 ÷ 2 = 42°. Quem marcou 84° esqueceu de dividir por 2."}, {"n": 24, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "As medidas 6 cm, 8 cm e 15 cm podem ser os lados de um triângulo?", "alts": ["Não, porque 15 não é múltiplo de 6 nem de 8", "Não, porque 6 + 8 é menor que 15", "Sim, porque as três medidas são diferentes entre si", "Sim, porque 15 é menor que o produto 6 · 8"], "certa": 1, "expl": "Pela condição de existência, cada lado deve ser menor que a soma dos outros dois. Como 6 + 8 = 14 e 14 < 15, o triângulo não existe."}, {"n": 25, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Dois lados de um triângulo medem 9 cm e 4 cm. O terceiro lado pode medir:", "alts": ["3 cm", "13 cm", "14 cm", "7 cm"], "certa": 3, "expl": "O terceiro lado fica entre a diferença e a soma: 9 − 4 = 5 e 9 + 4 = 13, ou seja, entre 5 cm e 13 cm, sem incluir as pontas. Só 7 cm serve."}, {"n": 26, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Num triângulo equilátero ABC, dois lados são expressos por 2x − 7 e x + 1, em centímetros. O valor de x é:", "alts": ["7", "9", "6", "8"], "certa": 3, "expl": "No equilátero todos os lados são iguais: 2x − 7 = x + 1 → 2x − x = 1 + 7 → x = 8. Conferindo, os dois lados medem 9 cm."}, {"n": 27, "tipo": "mc", "cap": "Cap. 09 — Triângulos", "enun": "Os três ângulos de um triângulo são tais que o segundo mede 28° a menos que o primeiro e o terceiro mede 10° a mais que o primeiro. O MAIOR ângulo desse triângulo mede:", "alts": ["80°", "76°", "38°", "66°"], "certa": 1, "expl": "Chamando o primeiro de x: x + (x − 28) + (x + 10) = 180 → 3x − 18 = 180 → x = 66. Os ângulos são 66°, 38° e 76°, e o maior é 76°."}, {"n": 28, "tipo": "rom", "cap": "Cap. 09 — Triângulos", "enun": "Analise as afirmativas a seguir sobre triângulos:", "alts": ["Apenas I e II estão corretas", "Apenas II e IV estão corretas", "Apenas I e III estão corretas", "I, II, III e IV estão corretas"], "certa": 0, "expl": "I é a propriedade fundamental e II vem dela (180 − 90 = 90). III é falsa: dois ângulos obtusos já passariam de 180°. IV é falsa por causa da condição de existência.", "afirm": ["A soma dos ângulos internos de qualquer triângulo é 180°.", "Num triângulo retângulo, os dois ângulos agudos somam 90°.", "Um triângulo pode ter dois ângulos obtusos.", "Três segmentos de reta quaisquer sempre formam um triângulo."]}], "objetivas": 27};
+var KEY = 'mat7_rota_simulado';
+var E = { resp:{}, som:{}, disc:'', enviado:false, acertos:0, codigo:'' };
+var LETRAS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'; /* sem I e sem O */
+
+function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+function badge(t){
+  if(t==='som') return '<span class="badge t-som">somatório</span>';
+  if(t==='rom') return '<span class="badge t-rom">afirmativas I–IV</span>';
+  if(t==='disc') return '<span class="badge t-disc">discursiva</span>';
+  return '<span class="badge">múltipla escolha</span>';
+}
+
+function montar(){
+  var cx = document.getElementById('questoes');
+  cx.innerHTML = '';
+  D.q.forEach(function(q){
+    var d = document.createElement('div');
+    d.className = 'qcx'; d.id = 'q'+q.n;
+    var cab = '<div class="cabq"><span class="qn">'+q.n+'</span>'+badge(q.tipo)+
+      '<span class="badge">'+esc(q.cap)+'</span><span class="pontos">(0,5)</span></div>';
+    var corpo = '<div>'+q.enun+'</div>';
+    if(q.tipo==='rom'){
+      corpo += '<ol class="afirm" type="I">'+q.afirm.map(function(a){return '<li>'+esc(a)+'</li>';}).join('')+'</ol>';
+    }
+    if(q.tipo==='mc' || q.tipo==='rom'){
+      corpo += q.alts.map(function(a,k){
+        var sel = (E.resp[q.n]===k) ? ' escolhida' : '';
+        return '<label class="alt'+sel+'" data-q="'+q.n+'" data-a="'+k+'">'+String.fromCharCode(97+k)+') '+esc(a)+'</label>';
+      }).join('');
+    } else if(q.tipo==='som'){
+      corpo += q.itens.map(function(it,k){
+        var mk = (E.som[q.n]||[]).indexOf(it[0])>=0 ? ' checked' : '';
+        return '<label class="somitem"><input type="checkbox" data-q="'+q.n+'" data-v="'+it[0]+'"'+mk+'>'+
+               '<span><span class="val">'+(it[0]<10?'0':'')+it[0]+'.</span> '+esc(it[1])+'</span></label>';
+      }).join('');
+      corpo += '<div class="somatotal">Soma marcada: <b id="soma'+q.n+'">00</b></div>';
+    } else {
+      corpo += '<textarea rows="6" id="disc'+q.n+'" placeholder="Escreva aqui a resolução completa, com as contas...">'+esc(E.disc||'')+'</textarea>';
+    }
+    d.innerHTML = cab + corpo;
+    cx.appendChild(d);
+  });
+  if(!E.enviado) ligar();
+  else travar();
+  atualizarSoma();
+  contar();
+}
+
+function ligar(){
+  document.querySelectorAll('.alt').forEach(function(el){
+    el.onclick = function(){
+      var n = +el.dataset.q;
+      E.resp[n] = +el.dataset.a;
+      document.querySelectorAll('.alt[data-q="'+n+'"]').forEach(function(o){ o.classList.remove('escolhida'); });
+      el.classList.add('escolhida');
+      salvarAgora(); contar();
+    };
+  });
+  document.querySelectorAll('.somitem input').forEach(function(el){
+    el.onchange = function(){
+      var n = +el.dataset.q, v = +el.dataset.v;
+      E.som[n] = E.som[n] || [];
+      var i = E.som[n].indexOf(v);
+      if(el.checked){ if(i<0) E.som[n].push(v); } else { if(i>=0) E.som[n].splice(i,1); }
+      salvarAgora(); atualizarSoma(); contar();
+    };
+  });
+  D.q.forEach(function(q){
+    if(q.tipo==='disc'){
+      var ta = document.getElementById('disc'+q.n);
+      if(ta) ta.oninput = function(){ E.disc = ta.value; salvarAgora(); contar(); };
+    }
+  });
+}
+
+function atualizarSoma(){
+  D.q.forEach(function(q){
+    if(q.tipo!=='som') return;
+    var el = document.getElementById('soma'+q.n);
+    if(!el) return;
+    var s = (E.som[q.n]||[]).reduce(function(a,b){return a+b;},0);
+    el.textContent = (s<10?'0':'')+s;
+  });
+}
+
+function respondidas(){
+  var n = 0;
+  D.q.forEach(function(q){
+    if(q.tipo==='mc'||q.tipo==='rom'){ if(E.resp[q.n]!==undefined) n++; }
+    else if(q.tipo==='som'){ if((E.som[q.n]||[]).length>0) n++; }
+    else { if((E.disc||'').trim().length>=10) n++; }
+  });
+  return n;
+}
+function contar(){
+  document.getElementById('contador').textContent = respondidas()+' de '+D.q.length+' respondidas';
+}
+
+function corrigir(){
+  var ac = 0;
+  D.q.forEach(function(q){
+    if(q.tipo==='mc'||q.tipo==='rom'){ if(E.resp[q.n]===q.certa) ac++; }
+    else if(q.tipo==='som'){
+      var s = (E.som[q.n]||[]).reduce(function(a,b){return a+b;},0);
+      var certos = q.itens.filter(function(i){return i[2];}).map(function(i){return i[0];}).sort().join(',');
+      var marc = (E.som[q.n]||[]).slice().sort(function(a,b){return a-b;}).join(',');
+      if(s===q.soma && certos===marc) ac++;
+    }
+  });
+  return ac;
+}
+
+function gerarCodigo(ac){
+  var yy = LETRAS[Math.floor(Math.random()*LETRAS.length)] + LETRAS[Math.floor(Math.random()*LETRAS.length)];
+  return 'SIM-' + (ac<10?'0':'') + ac + '-' + yy;
+}
+
+function enviar(forcado){
+  var falta = D.q.length - respondidas();
+  if(falta > 0 && !forcado){
+    modal('✋ Ainda falta responder', '<p>Você deixou <b>'+falta+'</b> questão(ões) em branco. Responda todas antes de enviar.</p>', [{texto:'Voltar', classe:'btn-1'}]);
+    return;
+  }
+  E.acertos = corrigir();
+  if(!E.codigo) E.codigo = gerarCodigo(E.acertos);
+  E.enviado = true;
+  salvarAgora();
+  RELOGIO.extra({acertos:E.acertos, totalObjetivas:D.objetivas, codigo:E.codigo, respondidas:respondidas()});
+  mostrarResultado();
+  montar();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function mostrarResultado(){
+  var r = document.getElementById('resultado');
+  r.classList.remove('oculto');
+  var pc = Math.round(E.acertos/D.objetivas*100);
+  r.innerHTML = '<div class="carta escura"><h2>🏁 Simulado enviado</h2>'+
+    '<p class="centro">Acertos nas questões objetivas: <b>'+E.acertos+' de '+D.objetivas+'</b> ('+pc+'%)</p>'+
+    '<p class="centro pequeno">A questão discursiva é corrigida pelo responsável, com a resposta modelo do gabarito.</p>'+
+    '<p class="centro">Código de liberação:</p><div class="codigo">'+E.codigo+'</div>'+
+    '<p class="centro pequeno">Entregue este código para o responsável abrir o gabarito comentado.</p></div>';
+  document.getElementById('codigo-topo').textContent = '· ' + E.codigo;
+  document.getElementById('area-gabarito').classList.remove('oculto');
+  document.getElementById('enviar').style.display = 'none';
+}
+
+function travar(){
+  document.querySelectorAll('.alt').forEach(function(el){ el.style.pointerEvents='none'; });
+  document.querySelectorAll('.somitem input').forEach(function(el){ el.disabled=true; });
+  D.q.forEach(function(q){ if(q.tipo==='disc'){ var t=document.getElementById('disc'+q.n); if(t) t.readOnly=true; } });
+}
+
+function montarGabarito(){
+  var g = document.getElementById('gabarito');
+  g.classList.remove('oculto');
+  var h = '';
+  D.q.forEach(function(q){
+    h += '<div class="qcx"><div class="cabq"><span class="qn">'+q.n+'</span>'+badge(q.tipo)+'<span class="badge">'+esc(q.cap)+'</span></div><div>'+q.enun+'</div>';
+    if(q.tipo==='rom') h += '<ol class="afirm" type="I">'+q.afirm.map(function(a){return '<li>'+esc(a)+'</li>';}).join('')+'</ol>';
+    if(q.tipo==='mc'||q.tipo==='rom'){
+      h += q.alts.map(function(a,k){
+        var cls = (k===q.certa) ? 'alt res-certa' : 'alt res-errada';
+        var marca = (k===q.certa) ? ' ✅' : (E.resp[q.n]===k ? ' ⬅️ você marcou' : '');
+        return '<div class="'+cls+'">'+String.fromCharCode(97+k)+') '+esc(a)+marca+'</div>';
+      }).join('');
+      h += '<div class="gab-expl"><b>Comentário:</b> '+esc(q.expl)+'</div>';
+    } else if(q.tipo==='som'){
+      h += q.itens.map(function(it){
+        var cls = it[2] ? 'alt res-certa' : 'alt res-errada';
+        var marcou = (E.som[q.n]||[]).indexOf(it[0])>=0 ? ' ⬅️ você marcou' : '';
+        return '<div class="'+cls+'"><b>'+(it[0]<10?'0':'')+it[0]+'.</b> '+esc(it[1])+(it[2]?' ✅':' ❌')+marcou+'</div>';
+      }).join('');
+      var s = (E.som[q.n]||[]).reduce(function(a,b){return a+b;},0);
+      h += '<div class="gab-expl"><b>Soma correta: '+(q.soma<10?'0':'')+q.soma+'</b> (sua soma: '+(s<10?'0':'')+s+')<br>'+esc(q.expl)+'</div>';
+    } else {
+      h += '<div class="gab-expl"><b>Resposta modelo (para o responsável corrigir):</b><br>'+esc(q.modelo)+'</div>';
+      h += '<div class="gab-expl"><b>O que o jovem aprendiz escreveu:</b><br>'+esc(E.disc||'(em branco)')+'</div>';
+    }
+    h += '</div>';
+  });
+  g.innerHTML = '<div class="carta escura"><h2>Gabarito comentado — 28 questões</h2>'+
+    '<p class="pequeno">Verde = alternativa correta. Cinza = incorreta, com o motivo no comentário.</p></div>' + h;
+}
+
+document.getElementById('enviar').onclick = function(){ enviar(false); };
+document.getElementById('btn-abrir').onclick = function(){
+  var v = (document.getElementById('cod-input').value||'').trim().toUpperCase();
+  if(v === E.codigo){ montarGabarito(); document.getElementById('erro-cod').innerHTML = ''; }
+  else document.getElementById('erro-cod').innerHTML = '<div class="aviso-vermelho">Código incorreto. Confira as letras e os números com o jovem aprendiz.</div>';
+};
+
+painelSalvar(KEY,
+  function(){ return E; },
+  function(sal){ if(sal){ E = Object.assign(E, sal); } },
+  function(){ E = {resp:{}, som:{}, disc:'', enviado:false, acertos:0, codigo:''}; }
+);
+montar();
+if(E.enviado) mostrarResultado();
+RELOGIO.init({key:KEY, minutos:45, titulo:'Pronto para o simulado?', aoTerminar:function(){
+  if(!E.enviado){ enviar(true); }
+}});
+</script>
+</body>
+</html>
