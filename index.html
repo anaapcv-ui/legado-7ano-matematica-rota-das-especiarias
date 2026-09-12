@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kit de Matemática 7º ano — Rota das Especiarias</title>
+<style>/* ====== ROTA DAS ESPECIARIAS — estilo comum ====== */
+:root{
+  --mar:#07242b; --mar2:#0d3540; --mar3:#12495a;
+  --madeira:#5b3a1f; --madeira2:#7d5230;
+  --ouro:#d9a441; --ouro2:#f0c667;
+  --perg:#f4e7cd; --perg2:#e6d3ad;
+  --canela:#b4552f; --verde:#3f8f6d; --verde2:#5fbf93;
+  --tinta:#2b1d10;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Georgia","Times New Roman",serif;
+  background:var(--mar);
+  background-image:radial-gradient(circle at 12% 8%, rgba(217,164,65,.10), transparent 45%),
+                   radial-gradient(circle at 88% 92%, rgba(63,143,109,.12), transparent 45%);
+  color:var(--perg); line-height:1.65; font-size:17px;
+}
+body.bloqueado > *:not(#capa-relogio){filter:blur(7px); pointer-events:none; user-select:none}
+.wrap{max-width:960px; margin:0 auto; padding:0 18px 80px}
+
+/* cabeçalho */
+header.topo{
+  background:linear-gradient(135deg,var(--mar2),var(--madeira));
+  border-bottom:4px solid var(--ouro); padding:26px 18px 20px; text-align:center;
+}
+header.topo .selo{font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--ouro2)}
+header.topo h1{margin:6px 0 4px; font-size:30px; color:var(--perg)}
+header.topo p.sub{margin:0; color:var(--perg2); font-size:15px}
+
+/* barra do relógio */
+.barra-rel{
+  position:sticky; top:0; z-index:50; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  justify-content:center; background:rgba(7,36,43,.96); border-bottom:1px solid rgba(217,164,65,.35);
+  padding:8px 14px; font-size:14px; font-family:system-ui,sans-serif;
+}
+.barra-rel #rel-tempo{color:var(--ouro2); font-weight:700}
+.barra-rel #rel-restante{color:var(--perg2); opacity:.85}
+#rel-aviso{display:none; width:100%; text-align:center; background:rgba(180,85,47,.25); border-radius:8px; padding:6px; margin-top:4px}
+
+/* navegação */
+nav.abas{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:18px 0 8px}
+nav.abas a{
+  font-family:system-ui,sans-serif; font-size:14px; text-decoration:none; padding:8px 14px; border-radius:999px;
+  color:var(--perg2); border:1px solid rgba(217,164,65,.4); background:rgba(13,53,64,.7);
+}
+nav.abas a.ativo{background:var(--ouro); color:var(--tinta); font-weight:700; border-color:var(--ouro)}
+
+/* cartões */
+.carta{
+  background:linear-gradient(180deg,var(--perg),var(--perg2)); color:var(--tinta);
+  border-radius:14px; padding:20px 22px; margin:18px 0;
+  box-shadow:0 8px 22px rgba(0,0,0,.35); border:1px solid rgba(91,58,31,.35);
+}
+.carta h2{margin:0 0 10px; font-size:22px; color:var(--madeira)}
+.carta h3{margin:16px 0 6px; font-size:18px; color:var(--canela)}
+.carta p{margin:10px 0}
+.escura{background:linear-gradient(180deg,var(--mar2),var(--mar)); color:var(--perg); border-color:rgba(217,164,65,.3)}
+.escura h2,.escura h3{color:var(--ouro2)}
+
+/* post-it e alertas */
+.postit{background:#ffe98a; color:#3a2b06; border-left:7px solid #e0a800; padding:12px 16px; border-radius:8px; margin:14px 0; box-shadow:2px 3px 8px rgba(0,0,0,.2)}
+.pegadinha{background:#fde3d8; color:#5d1f0c; border-left:7px solid var(--canela); padding:12px 16px; border-radius:8px; margin:14px 0}
+.narrador{background:rgba(63,143,109,.18); border-left:7px solid var(--verde); padding:12px 16px; border-radius:8px; margin:14px 0; font-style:italic}
+.formula{background:#10303a; color:var(--ouro2); font-family:"Courier New",monospace; font-size:18px; text-align:center; padding:12px; border-radius:10px; margin:12px 0; border:1px dashed var(--ouro)}
+.carta .formula{background:#2b1d10; color:var(--ouro2)}
+
+/* botões */
+.btn{font-family:system-ui,sans-serif; font-size:15px; padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:600}
+.btn-1{background:var(--ouro); color:var(--tinta)}
+.btn-1:hover{background:var(--ouro2)}
+.btn-2{background:transparent; color:var(--perg2); border:1px solid rgba(217,164,65,.5)}
+.btn-3{background:var(--verde); color:#04231a}
+.btn-grande{font-size:19px; padding:14px 30px}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+
+/* tabelas */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-family:system-ui,sans-serif; font-size:15px}
+th,td{border:1px solid rgba(91,58,31,.3); padding:8px 10px; text-align:left}
+th{background:var(--madeira); color:var(--perg)}
+.escura th{background:var(--mar3)}
+.escura td{border-color:rgba(217,164,65,.25)}
+
+/* campos */
+textarea,input[type=text]{
+  width:100%; font-family:system-ui,sans-serif; font-size:15px; padding:10px; border-radius:8px;
+  border:2px solid rgba(91,58,31,.35); background:#fffdf6; color:var(--tinta); resize:vertical;
+}
+textarea:focus,input[type=text]:focus{outline:none; border-color:var(--canela)}
+.perg{margin:16px 0; padding:14px; border-radius:10px; background:rgba(255,255,255,.45); border:1px solid rgba(91,58,31,.2)}
+.perg.vermelha{background:#ffe2dd; border:2px solid #c0392b}
+.perg .enun{font-weight:700; margin-bottom:8px}
+.aviso-copia{background:#fff4cc; border-left:6px solid #e0a800; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#4a3806}
+.aviso-vermelho{background:#ffd9d2; border-left:6px solid #c0392b; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#7d1f12}
+.modelo{background:#e8f5ee; border-left:6px solid var(--verde); padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:15px; color:#123a2b}
+.checklist{font-family:system-ui,sans-serif; font-size:14px; margin-top:8px}
+.checklist .item{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0}
+.checklist .item span{flex:1; min-width:180px}
+.mini{font-size:13px; padding:5px 12px; border-radius:8px; border:1px solid rgba(91,58,31,.4); background:#fff; cursor:pointer; font-family:system-ui,sans-serif}
+.mini.on-sim{background:var(--verde); color:#fff; border-color:var(--verde)}
+.mini.on-nao{background:var(--canela); color:#fff; border-color:var(--canela)}
+
+/* blocos */
+.bloco{margin:22px 0}
+.bloco.trancado .corpo{display:none}
+.bloco .cabeca{display:flex; gap:10px; align-items:center; cursor:pointer}
+.bloco .num{background:var(--ouro); color:var(--tinta); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex:none}
+.bloco.trancado .num{background:#6c6250; color:#ddd}
+.bloco .status{margin-left:auto; font-size:13px; font-family:system-ui,sans-serif}
+
+/* fixação */
+.fix{margin:10px 0; padding:12px; border-radius:10px; background:rgba(43,29,16,.07); border:1px solid rgba(91,58,31,.25)}
+.fix .alt{display:block; margin:6px 0; padding:8px 12px; border-radius:8px; background:#fffdf6; border:1px solid rgba(91,58,31,.25); cursor:pointer; font-family:system-ui,sans-serif; font-size:15px}
+.fix .alt:hover{background:#fff6e0}
+.fix .alt.escolhida{border-color:var(--canela); background:#ffeede}
+.fix .alt.certa{background:#d6f0e0; border-color:var(--verde)}
+.fix .alt.errada{background:#efe7e4; border-color:#999; opacity:.75}
+.barra{height:12px; background:rgba(0,0,0,.2); border-radius:999px; overflow:hidden; margin:10px 0}
+.barra div{height:100%; background:linear-gradient(90deg,var(--verde),var(--ouro)); width:0; transition:width .4s}
+
+/* capa do relógio */
+.capa-relogio{position:fixed; inset:0; z-index:200; background:rgba(7,36,43,.97); display:flex; align-items:center; justify-content:center; padding:20px}
+.capa-cx{max-width:520px; text-align:center; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:18px; padding:34px 26px}
+.capa-icone{font-size:54px}
+.capa-cx h2{color:var(--ouro2); margin:8px 0 12px}
+.capa-cx p{color:var(--perg2); font-size:16px}
+
+/* modais */
+.modal-bg{position:fixed; inset:0; background:rgba(4,18,22,.85); display:flex; align-items:center; justify-content:center; z-index:300; padding:20px}
+.modal-cx{max-width:520px; width:100%; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:16px; padding:24px}
+.modal-cx h3{margin:0 0 10px; color:var(--ouro2)}
+.modal-corpo{color:var(--perg2); font-size:16px}
+.modal-pe{display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap}
+.pausa-relogio{font-size:34px; text-align:center; color:var(--ouro2); font-family:"Courier New",monospace}
+
+/* painel salvar */
+.painel{background:rgba(13,53,64,.85); border:1px solid rgba(217,164,65,.35); border-radius:12px; padding:14px; margin:22px 0; font-family:system-ui,sans-serif; font-size:14px; text-align:center}
+.painel .linha{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+.painel textarea{min-height:120px; margin-top:10px}
+
+/* rodapé de navegação */
+.proximo{text-align:center; margin:32px 0 10px}
+.proximo a{display:inline-block; background:var(--verde); color:#04231a; text-decoration:none; padding:14px 26px; border-radius:12px; font-family:system-ui,sans-serif; font-weight:700}
+
+/* utilitários */
+.centro{text-align:center}
+.pequeno{font-size:14px}
+.oculto{display:none}
+.selo-ok{color:var(--verde2)} .selo-rev{color:#ffb26b}
+ul.limpa{padding-left:20px} ul.limpa li{margin:6px 0}
+@media(max-width:520px){
+  body{font-size:16px}
+  header.topo h1{font-size:24px}
+  .carta{padding:16px}
+}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin:20px 0}
+.card{background:linear-gradient(160deg,#12495a,#0d3540); border:2px solid var(--ouro); border-radius:16px; padding:20px; text-decoration:none; color:var(--perg); display:block; transition:transform .2s}
+.card:hover{transform:translateY(-4px)}
+.card .ic{font-size:40px}
+.card h3{margin:8px 0 4px; color:var(--ouro2); font-size:20px}
+.card p{margin:0; font-size:15px; color:var(--perg2)}
+.card .ordem{font-family:system-ui,sans-serif; font-size:12px; letter-spacing:.15em; text-transform:uppercase; opacity:.7}
+.crono{border-left:3px solid var(--ouro); padding-left:18px; margin:16px 0}
+.crono .dia{margin:14px 0}
+.crono .dia b{color:var(--ouro2)}
+.rel-tab td b{color:var(--ouro2)}
+.rel-box{background:rgba(7,36,43,.6); border:1px solid rgba(217,164,65,.35); border-radius:12px; padding:14px; margin:12px 0}
+.rel-box h3{margin:0 0 8px; color:var(--ouro2)}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="selo">⚓ Rota das Especiarias</div>
+  <h1>Kit de Estudos — Matemática 7º ano</h1>
+  <p class="sub">Prova AV1 · III Trimestre · quinta-feira, 17 de setembro de 2026</p>
+</header>
+
+<div class="wrap">
+  <div class="carta escura">
+    <h2>🧭 O que cai na prova</h2>
+    <table>
+      <thead><tr><th>Capítulo</th><th>Assunto</th><th>Páginas</th></tr></thead>
+      <tbody>
+        <tr><td><b>07</b></td><td>Razão, proporção e regra de três (direta e inversa)</td><td>36 a 40</td></tr>
+        <tr><td><b>08</b></td><td>Matemática financeira: porcentagem, acréscimo, desconto e juros simples</td><td>65 a 68; 75 e 76</td></tr>
+        <tr><td><b>09</b></td><td>Triângulos: classificação, ângulos internos e externos, condição de existência</td><td>109; 112; 117 a 120; 128</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="centro" style="color:var(--ouro2); margin-top:30px">Os três materiais, na ordem de estudo</h2>
+  <div class="cards">
+    <a class="card" href="leitura.html">
+      <div class="ic">📖</div>
+      <div class="ordem">1º · comece por aqui</div>
+      <h3>Leitura Estendida</h3>
+      <p>10 portos com explicação, 4 exercícios de fixação por porto e 3 perguntas para escrever com as próprias palavras.</p>
+    </a>
+    <a class="card" href="resumo.html">
+      <div class="ic">🗺️</div>
+      <div class="ordem">2º · depois da leitura</div>
+      <h3>Resumo Interativo</h3>
+      <p>Fórmulas, tabela de fatores, cartas que viram com a classificação dos triângulos, macetes e as 10 armadilhas.</p>
+    </a>
+    <a class="card" href="simulado.html">
+      <div class="ic">📝</div>
+      <div class="ordem">3º · por último</div>
+      <h3>Simulado</h3>
+      <p>28 questões no formato da prova, com código de liberação e gabarito comentado para o responsável.</p>
+    </a>
+  </div>
+
+  <div class="carta">
+    <h2>📅 Cronograma sugerido até a prova</h2>
+    <div class="crono">
+      <div class="dia"><b>Sábado e domingo (13 e 14/09)</b><br>Leitura Estendida — portos 1 a 5 no sábado (regra de três e porcentagem) e portos 6 a 10 no domingo (juros e triângulos). Uma sessão de 45 minutos por dia já resolve.</div>
+      <div class="dia"><b>Segunda-feira (15/09)</b><br>Resumo Interativo inteiro, marcando cada parte como estudada. Guarde a tabela de fatores e a folha de regras impressa.</div>
+      <div class="dia"><b>Terça-feira (16/09)</b><br>Simulado completo, sem consultar nada, como se fosse a prova. Depois abra o gabarito com o responsável e refaça só o que errou.</div>
+      <div class="dia"><b>Quarta-feira (16/09, à noite)</b><br>Revisão rápida: a lista "para revisar" da Leitura e as 10 armadilhas do Resumo.</div>
+    </div>
+  </div>
+
+  <div class="carta escura">
+    <h2>👩 Dica para a mãe ou responsável</h2>
+    <p>Ao terminar o simulado, aparece um <b>código de liberação</b> no formato
+    <b>SIM-XX-YY</b> (por exemplo, SIM-24-KP). O número do meio é a quantidade de
+    acertos. O gabarito comentado só abre com esse código, então peça o código antes
+    de abrir — assim você sabe que a prova foi feita até o fim.</p>
+    <p>Para ver o tempo de estudo e o que ficou pendente, use o relatório abaixo com o
+    código da família: <b>PAIS-77</b>.</p>
+  </div>
+
+  <div class="carta escura" id="relatorio">
+    <h2>📊 Relatório para os pais</h2>
+    <p>Digite o código <b>PAIS-77</b> (ou o código SIM do simulado) para ver o
+    acompanhamento.</p>
+    <input type="text" id="cod-pais" placeholder="PAIS-77" style="max-width:220px">
+    <div style="margin-top:10px"><button class="btn btn-1" id="btn-rel">Ver relatório</button></div>
+    <div id="saida-rel"></div>
+  </div>
+
+  <div class="carta">
+    <h2>🖨️ Extra para imprimir</h2>
+    <p>A <b>Folha de Regras</b> (mapa mental de uma página, A4 deitado) reúne as três
+    fórmulas principais e os macetes. Abra e use o botão de imprimir da própria página.</p>
+    <p class="centro"><a class="btn btn-1" style="text-decoration:none; display:inline-block" href="folha-de-regras.html">📄 Abrir a Folha de Regras</a></p>
+  </div>
+
+  <p class="centro pequeno" style="opacity:.6; margin-top:34px">
+    Kit produzido a partir das páginas do livro Bernoulli Sistema de Ensino indicadas pela professora.
+  </p>
+</div>
+
+<script>
+/* ====== NÚCLEO COMUM — Rota das Especiarias (kit 7º ano Matemática) ====== */
+/* Armazenamento seguro (não quebra se o navegador bloquear) */
+var MEM = {};
+var Store = {
+  get: function (k) {
+    try { var v = localStorage.getItem(k); return v === null ? (MEM[k] === undefined ? null : MEM[k]) : v; }
+    catch (e) { return MEM[k] === undefined ? null : MEM[k]; }
+  },
+  set: function (k, v) {
+    MEM[k] = v;
+    try { localStorage.setItem(k, v); } catch (e) { }
+  },
+  del: function (k) {
+    delete MEM[k];
+    try { localStorage.removeItem(k); } catch (e) { }
+  },
+  getJSON: function (k, def) { var v = this.get(k); if (!v) return def; try { return JSON.parse(v); } catch (e) { return def; } },
+  setJSON: function (k, o) { this.set(k, JSON.stringify(o)); }
+};
+
+/* Modal desenhado na página (nunca alert/confirm/prompt) */
+function modal(titulo, corpoHTML, botoes) {
+  var velho = document.getElementById('modal-bg');
+  if (velho) velho.remove();
+  var bg = document.createElement('div');
+  bg.id = 'modal-bg';
+  bg.className = 'modal-bg';
+  var cx = document.createElement('div');
+  cx.className = 'modal-cx';
+  cx.innerHTML = '<h3>' + titulo + '</h3><div class="modal-corpo">' + corpoHTML + '</div>';
+  var pe = document.createElement('div');
+  pe.className = 'modal-pe';
+  (botoes || [{ texto: 'Fechar' }]).forEach(function (b) {
+    var bt = document.createElement('button');
+    bt.className = 'btn ' + (b.classe || 'btn-2');
+    bt.textContent = b.texto;
+    bt.onclick = function () { bg.remove(); if (b.acao) b.acao(); };
+    pe.appendChild(bt);
+  });
+  cx.appendChild(pe);
+  bg.appendChild(cx);
+  document.body.appendChild(bg);
+  return bg;
+}
+
+/* ====== RELÓGIO DE ESTUDO ====== */
+var RELOGIO = (function () {
+  var KEY = '', MIN_SESSAO = 45, INAT = 180000, PAUSA = 300000;
+  var d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} };
+  var sessaoMs = 0, rodando = false, travado = false, ultimaAtiv = Date.now(), pausadoInat = false;
+  var elTempo, elAviso, timer, fimPausa = 0, inicioSessao = null;
+
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000), m = Math.floor(s / 60), h = Math.floor(m / 60);
+    m = m % 60; s = s % 60;
+    return (h > 0 ? h + 'h ' : '') + m + 'min ' + (s < 10 ? '0' : '') + s + 's';
+  }
+  function salvar() {
+    d.extra = d.extra || {};
+    Store.setJSON(KEY + '_tempo', d);
+  }
+  function pintar() {
+    if (!elTempo) return;
+    elTempo.textContent = '⏱️ ' + fmt(d.ativoMs);
+    var restante = MIN_SESSAO * 60000 - sessaoMs;
+    var elRest = document.getElementById('rel-restante');
+    if (elRest) elRest.textContent = travado ? 'pausa obrigatória' : (rodando ? 'faltam ' + Math.max(0, Math.ceil(restante / 60000)) + ' min nesta sessão' : 'parado');
+  }
+  function marcarAtividade() {
+    ultimaAtiv = Date.now();
+    if (pausadoInat) { pausadoInat = false; esconderAviso(); }
+  }
+  function mostrarAviso(html) {
+    if (!elAviso) return;
+    elAviso.innerHTML = html;
+    elAviso.style.display = 'block';
+  }
+  function esconderAviso() { if (elAviso) elAviso.style.display = 'none'; }
+
+  function tick() {
+    if (!rodando) return;
+    var agora = Date.now();
+    if (travado) {
+      var falta = fimPausa - agora;
+      if (falta <= 0) { destravar(); }
+      else {
+        var mm = Math.floor(falta / 60000), ss = Math.floor((falta % 60000) / 1000);
+        var el = document.getElementById('pausa-contagem');
+        if (el) el.textContent = mm + ':' + (ss < 10 ? '0' : '') + ss;
+      }
+      return;
+    }
+    d.totalMs += 1000;
+    if (agora - ultimaAtiv < INAT) {
+      d.ativoMs += 1000;
+      sessaoMs += 1000;
+    } else if (!pausadoInat) {
+      pausadoInat = true;
+      mostrarAviso('😴 <b>Estudo pausado</b> — toque na tela para continuar.');
+    }
+    if (sessaoMs >= MIN_SESSAO * 60000) travar();
+    if (d.totalMs % 10000 === 0) salvar();
+    pintar();
+  }
+
+  function travar() {
+    travado = true; sessaoMs = 0; fimPausa = Date.now() + PAUSA;
+    var bg = document.createElement('div');
+    bg.id = 'pausa-bg'; bg.className = 'modal-bg';
+    bg.innerHTML = '<div class="modal-cx"><h3>⚓ Hora de ancorar!</h3><div class="modal-corpo">' +
+      '<p>Você estudou <b>' + MIN_SESSAO + ' minutos</b> seguidos. Agora é pausa obrigatória de 5 minutos.</p>' +
+      '<p>Levante, beba água, olhe pela janela. O material volta sozinho.</p>' +
+      '<p class="pausa-relogio">⏳ <span id="pausa-contagem">5:00</span></p></div></div>';
+    document.body.appendChild(bg);
+    salvar();
+  }
+  function destravar() {
+    travado = false;
+    var bg = document.getElementById('pausa-bg');
+    if (bg) bg.remove();
+    marcarAtividade();
+  }
+
+  function comecar() {
+    var capa = document.getElementById('capa-relogio');
+    if (capa) capa.remove();
+    document.body.classList.remove('bloqueado');
+    rodando = true; inicioSessao = new Date().toISOString();
+    marcarAtividade();
+    if (!timer) timer = setInterval(tick, 1000);
+    pintar();
+  }
+
+  function terminar(cb) {
+    modal('⏹ Terminar agora?', '<p>Quer encerrar o estudo agora? O tempo é salvo e, no quiz ou simulado, a tentativa é <b>fechada como está</b> — mesmo com questões em branco.</p>',
+      [{ texto: 'Continuar estudando', classe: 'btn-2' },
+      {
+        texto: 'Sim, terminar', classe: 'btn-1', acao: function () {
+          rodando = false;
+          if (inicioSessao) { d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() }); inicioSessao = null; }
+          salvar(); pintar();
+          if (cb) cb();
+        }
+      }]);
+  }
+
+  return {
+    init: function (opts) {
+      KEY = opts.key;
+      MIN_SESSAO = opts.minutos || 45;
+      d = Store.getJSON(KEY + '_tempo', { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} });
+      d.sessoes = d.sessoes || []; d.extra = d.extra || {};
+      elTempo = document.getElementById('rel-tempo');
+      elAviso = document.getElementById('rel-aviso');
+      document.body.classList.add('bloqueado');
+      var capa = document.createElement('div');
+      capa.id = 'capa-relogio';
+      capa.className = 'capa-relogio';
+      capa.innerHTML = '<div class="capa-cx"><div class="capa-icone">⏱️</div><h2>' + (opts.titulo || 'Pronto para zarpar?') + '</h2>' +
+        '<p>O relógio de estudo conta quanto tempo você estudou de verdade. Cada viagem dura <b>' + MIN_SESSAO + ' minutos</b>, depois vem uma pausa de 5 minutos.</p>' +
+        '<button class="btn btn-1 btn-grande" id="btn-comecar">⛵ Começar a estudar</button></div>';
+      document.body.appendChild(capa);
+      document.getElementById('btn-comecar').onclick = comecar;
+      ['click', 'keydown', 'scroll', 'touchstart', 'input'].forEach(function (ev) {
+        document.addEventListener(ev, marcarAtividade, true);
+      });
+      window.addEventListener('beforeunload', function () {
+        if (inicioSessao) d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() });
+        salvar();
+      });
+      pintar();
+      var bt = document.getElementById('btn-terminar');
+      if (bt) bt.onclick = function () { terminar(opts.aoTerminar); };
+    },
+    extra: function (obj) { d.extra = Object.assign(d.extra || {}, obj); salvar(); },
+    dados: function () { return d; },
+    zerar: function () { d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} }; sessaoMs = 0; salvar(); pintar(); },
+    fmt: fmt,
+    _debug: function (o) { if (o && o.restante !== undefined) sessaoMs = MIN_SESSAO * 60000 - o.restante * 1000; if (o && o.inat !== undefined) ultimaAtiv = Date.now() - o.inat * 1000; if (o && o.pausa !== undefined) fimPausa = Date.now() + o.pausa * 1000; },
+    _tick: tick,
+    _comecar: comecar,
+    _travado: function(){ return travado; },
+    _sessao: function(){ return sessaoMs; }
+  };
+})();
+
+/* ====== ANTICÓPIA ====== */
+var Anticopia = (function () {
+  function norm(t) {
+    return (t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function pal(t) { var n = norm(t); return n ? n.split(' ') : []; }
+  /* marca as palavras de A que estão em sequências comuns com B de tamanho >= min */
+  function marcar(a, b, min) {
+    var marcas = new Array(a.length).fill(0), maior = 0;
+    var prev = new Array(b.length + 1).fill(0);
+    for (var i = 0; i < a.length; i++) {
+      var cur = new Array(b.length + 1).fill(0);
+      for (var j = 0; j < b.length; j++) {
+        if (a[i] === b[j]) {
+          cur[j + 1] = prev[j] + 1;
+          if (cur[j + 1] > maior) maior = cur[j + 1];
+          if (cur[j + 1] >= min) {
+            for (var k = 0; k < cur[j + 1]; k++) marcas[i - k] = 1;
+          }
+        }
+      }
+      prev = cur;
+    }
+    return { marcas: marcas, maior: maior };
+  }
+  return {
+    /* true = a resposta é transcrição do texto do bloco */
+    ehCopia: function (resposta, textoBloco, pergunta) {
+      var r = pal(resposta);
+      if (r.length < 6) return false;
+      var citacao = marcar(r, pal(pergunta || ''), 4).marcas;
+      var livres = [], mapa = [];
+      for (var i = 0; i < r.length; i++) { if (!citacao[i]) { livres.push(r[i]); mapa.push(i); } }
+      if (livres.length < 6) return false;
+      var t = pal(textoBloco);
+      var m8 = marcar(livres, t, 8);
+      if (m8.maior >= 8) return true;
+      var m5 = marcar(livres, t, 5);
+      var soma = m5.marcas.reduce(function (x, y) { return x + y; }, 0);
+      return (soma / livres.length) > 0.6;
+    },
+    _norm: norm
+  };
+})();
+
+/* ====== PAINEL DE SALVAMENTO ====== */
+function painelSalvar(KEY, coletar, restaurar, aoZerar) {
+  function carimbo() {
+    var q = Store.get(KEY + '_quando');
+    var el = document.getElementById('salvo-quando');
+    if (el) el.textContent = q ? 'último salvamento: ' + q : 'ainda não salvo';
+  }
+  window.salvarAgora = function () {
+    Store.setJSON(KEY, coletar());
+    Store.set(KEY + '_quando', new Date().toLocaleString('pt-BR'));
+    carimbo();
+  };
+  window.exportarTudo = function () {
+    var pacote = { chave: KEY, dados: Store.getJSON(KEY, {}), tempo: Store.getJSON(KEY + '_tempo', {}), quando: Store.get(KEY + '_quando') };
+    var txt = JSON.stringify(pacote, null, 2);
+    var cx = document.getElementById('caixa-export');
+    cx.style.display = 'block';
+    cx.querySelector('textarea').value = txt;
+    cx.querySelector('textarea').select();
+  };
+  window.importarTudo = function () {
+    var cx = document.getElementById('caixa-import');
+    cx.style.display = 'block';
+  };
+  window.confirmarImport = function () {
+    var txt = document.getElementById('area-import').value;
+    try {
+      var p = JSON.parse(txt);
+      if (p.dados) Store.setJSON(KEY, p.dados);
+      if (p.tempo) Store.setJSON(KEY + '_tempo', p.tempo);
+      if (p.quando) Store.set(KEY + '_quando', p.quando);
+      modal('✅ Importado', '<p>Os dados voltaram. A página vai recarregar.</p>', [{ texto: 'Ok', classe: 'btn-1', acao: function () { location.reload(); } }]);
+    } catch (e) {
+      modal('❌ Não deu', '<p>Esse texto não parece um arquivo de backup válido.</p>', [{ texto: 'Ok', classe: 'btn-1' }]);
+    }
+  };
+  window.zerarTudo = function () {
+    modal('🗑️ Zerar tudo?', '<p>Isso apaga todas as respostas <b>e o tempo de estudo</b> deste material. Não dá para desfazer.</p>',
+      [{ texto: 'Cancelar', classe: 'btn-2' },
+      {
+        texto: 'Sim, apagar', classe: 'btn-1', acao: function () {
+          Store.del(KEY); Store.del(KEY + '_quando'); Store.del(KEY + '_tempo');
+          if (aoZerar) aoZerar();
+          location.reload();
+        }
+      }]);
+  };
+  carimbo();
+  if (restaurar) restaurar(Store.getJSON(KEY, null));
+  setInterval(function () { window.salvarAgora(); }, 15000);
+}
+
+
+var MATS = [
+  {key:'mat7_rota_leitura',  nome:'📖 Leitura Estendida', tipo:'leitura'},
+  {key:'mat7_rota_resumo',   nome:'🗺️ Resumo Interativo', tipo:'resumo'},
+  {key:'mat7_rota_simulado', nome:'📝 Simulado',          tipo:'simulado'}
+];
+
+function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+function fmt(ms){ return RELOGIO.fmt(ms||0); }
+
+function montarRelatorio(){
+  var h = '';
+  var totalAtivo = 0;
+  MATS.forEach(function(m){
+    var t = Store.getJSON(m.key+'_tempo', null);
+    var d = Store.getJSON(m.key, null);
+    h += '<div class="rel-box"><h3>'+m.nome+'</h3>';
+    if(!t){ h += '<p class="pequeno">Ainda não foi aberto neste computador.</p></div>'; return; }
+    totalAtivo += (t.ativoMs||0);
+    var e = t.extra || {};
+    h += '<table class="rel-tab"><tbody>';
+    h += '<tr><td>Tempo total com o material aberto</td><td><b>'+fmt(t.totalMs)+'</b></td></tr>';
+    h += '<tr><td>Tempo ativo (estudando de verdade)</td><td><b>'+fmt(t.ativoMs)+'</b>'+
+         (m.tipo==='leitura' ? ' <span class="pequeno">· referência: cerca de 1h</span>' : '')+'</td></tr>';
+    h += '<tr><td>Sessões de estudo</td><td><b>'+((t.sessoes||[]).length)+'</b></td></tr>';
+    if(m.tipo==='leitura'){
+      h += '<tr><td>Portos concluídos</td><td><b>'+(e.blocosFeitos||0)+' de '+(e.totalBlocos||10)+'</b></td></tr>';
+      h += '<tr><td>Respostas marcadas em vermelho (copiadas do texto)</td><td><b>'+(e.vermelhas||0)+'</b></td></tr>';
+      h += '<tr><td>Pontos para revisar (checklist com "não" ou em branco)</td><td><b>'+(e.paraRevisar||0)+'</b></td></tr>';
+      if(d && d.blocos){
+        var fx = [];
+        for(var i=0;i<10;i++){ var b = d.blocos[i]; if(b && b.corrigida) fx.push((i+1)+'º porto: '+b.acertos+'/4'); }
+        if(fx.length) h += '<tr><td>Fixação por porto</td><td class="pequeno">'+esc(fx.join(' · '))+'</td></tr>';
+      }
+    }
+    if(m.tipo==='resumo'){
+      h += '<tr><td>Quanto do resumo foi percorrido</td><td><b>'+(e.rolagemMax||0)+'%</b></td></tr>';
+      h += '<tr><td>Partes marcadas como estudadas</td><td><b>'+(e.partesEstudadas||0)+' de '+(e.totalPartes||7)+'</b></td></tr>';
+    }
+    if(m.tipo==='simulado'){
+      h += '<tr><td>Acertos nas questões objetivas</td><td><b>'+(e.acertos!==undefined ? e.acertos+' de '+(e.totalObjetivas||27) : 'ainda não enviado')+'</b></td></tr>';
+      h += '<tr><td>Questões respondidas</td><td><b>'+(e.respondidas||0)+' de 28</b></td></tr>';
+      h += '<tr><td>Código gerado</td><td><b>'+esc(e.codigo||'—')+'</b></td></tr>';
+    }
+    h += '</tbody></table></div>';
+  });
+  h = '<div class="rel-box"><h3>⏱️ Tempo ativo somando os três materiais</h3><p style="font-size:22px;color:var(--ouro2);margin:0"><b>'+fmt(totalAtivo)+'</b></p>'+
+      '<p class="pequeno">Referência para este kit inteiro: cerca de 3 a 4 horas ao longo da semana. Não é meta, é só um parâmetro.</p></div>' + h;
+  document.getElementById('saida-rel').innerHTML = h;
+}
+
+document.getElementById('btn-rel').onclick = function(){
+  var v = (document.getElementById('cod-pais').value||'').trim().toUpperCase();
+  var simCod = (Store.getJSON('mat7_rota_simulado_tempo', {}).extra||{}).codigo || '';
+  if(v === 'PAIS-77' || (simCod && v === simCod)) montarRelatorio();
+  else document.getElementById('saida-rel').innerHTML = '<div class="aviso-vermelho">Código incorreto. Use <b>PAIS-77</b> ou o código SIM que apareceu no fim do simulado.</div>';
+};
+</script>
+</body>
+</html>
