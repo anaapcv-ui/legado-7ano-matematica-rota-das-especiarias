@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leitura Estendida — Matemática 7º ano | Rota das Especiarias</title>
+<style>/* ====== ROTA DAS ESPECIARIAS — estilo comum ====== */
+:root{
+  --mar:#07242b; --mar2:#0d3540; --mar3:#12495a;
+  --madeira:#5b3a1f; --madeira2:#7d5230;
+  --ouro:#d9a441; --ouro2:#f0c667;
+  --perg:#f4e7cd; --perg2:#e6d3ad;
+  --canela:#b4552f; --verde:#3f8f6d; --verde2:#5fbf93;
+  --tinta:#2b1d10;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:"Georgia","Times New Roman",serif;
+  background:var(--mar);
+  background-image:radial-gradient(circle at 12% 8%, rgba(217,164,65,.10), transparent 45%),
+                   radial-gradient(circle at 88% 92%, rgba(63,143,109,.12), transparent 45%);
+  color:var(--perg); line-height:1.65; font-size:17px;
+}
+body.bloqueado > *:not(#capa-relogio){filter:blur(7px); pointer-events:none; user-select:none}
+.wrap{max-width:960px; margin:0 auto; padding:0 18px 80px}
+
+/* cabeçalho */
+header.topo{
+  background:linear-gradient(135deg,var(--mar2),var(--madeira));
+  border-bottom:4px solid var(--ouro); padding:26px 18px 20px; text-align:center;
+}
+header.topo .selo{font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--ouro2)}
+header.topo h1{margin:6px 0 4px; font-size:30px; color:var(--perg)}
+header.topo p.sub{margin:0; color:var(--perg2); font-size:15px}
+
+/* barra do relógio */
+.barra-rel{
+  position:sticky; top:0; z-index:50; display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  justify-content:center; background:rgba(7,36,43,.96); border-bottom:1px solid rgba(217,164,65,.35);
+  padding:8px 14px; font-size:14px; font-family:system-ui,sans-serif;
+}
+.barra-rel #rel-tempo{color:var(--ouro2); font-weight:700}
+.barra-rel #rel-restante{color:var(--perg2); opacity:.85}
+#rel-aviso{display:none; width:100%; text-align:center; background:rgba(180,85,47,.25); border-radius:8px; padding:6px; margin-top:4px}
+
+/* navegação */
+nav.abas{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:18px 0 8px}
+nav.abas a{
+  font-family:system-ui,sans-serif; font-size:14px; text-decoration:none; padding:8px 14px; border-radius:999px;
+  color:var(--perg2); border:1px solid rgba(217,164,65,.4); background:rgba(13,53,64,.7);
+}
+nav.abas a.ativo{background:var(--ouro); color:var(--tinta); font-weight:700; border-color:var(--ouro)}
+
+/* cartões */
+.carta{
+  background:linear-gradient(180deg,var(--perg),var(--perg2)); color:var(--tinta);
+  border-radius:14px; padding:20px 22px; margin:18px 0;
+  box-shadow:0 8px 22px rgba(0,0,0,.35); border:1px solid rgba(91,58,31,.35);
+}
+.carta h2{margin:0 0 10px; font-size:22px; color:var(--madeira)}
+.carta h3{margin:16px 0 6px; font-size:18px; color:var(--canela)}
+.carta p{margin:10px 0}
+.escura{background:linear-gradient(180deg,var(--mar2),var(--mar)); color:var(--perg); border-color:rgba(217,164,65,.3)}
+.escura h2,.escura h3{color:var(--ouro2)}
+
+/* post-it e alertas */
+.postit{background:#ffe98a; color:#3a2b06; border-left:7px solid #e0a800; padding:12px 16px; border-radius:8px; margin:14px 0; box-shadow:2px 3px 8px rgba(0,0,0,.2)}
+.pegadinha{background:#fde3d8; color:#5d1f0c; border-left:7px solid var(--canela); padding:12px 16px; border-radius:8px; margin:14px 0}
+.narrador{background:rgba(63,143,109,.18); border-left:7px solid var(--verde); padding:12px 16px; border-radius:8px; margin:14px 0; font-style:italic}
+.formula{background:#10303a; color:var(--ouro2); font-family:"Courier New",monospace; font-size:18px; text-align:center; padding:12px; border-radius:10px; margin:12px 0; border:1px dashed var(--ouro)}
+.carta .formula{background:#2b1d10; color:var(--ouro2)}
+
+/* botões */
+.btn{font-family:system-ui,sans-serif; font-size:15px; padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:600}
+.btn-1{background:var(--ouro); color:var(--tinta)}
+.btn-1:hover{background:var(--ouro2)}
+.btn-2{background:transparent; color:var(--perg2); border:1px solid rgba(217,164,65,.5)}
+.btn-3{background:var(--verde); color:#04231a}
+.btn-grande{font-size:19px; padding:14px 30px}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+
+/* tabelas */
+table{width:100%; border-collapse:collapse; margin:14px 0; font-family:system-ui,sans-serif; font-size:15px}
+th,td{border:1px solid rgba(91,58,31,.3); padding:8px 10px; text-align:left}
+th{background:var(--madeira); color:var(--perg)}
+.escura th{background:var(--mar3)}
+.escura td{border-color:rgba(217,164,65,.25)}
+
+/* campos */
+textarea,input[type=text]{
+  width:100%; font-family:system-ui,sans-serif; font-size:15px; padding:10px; border-radius:8px;
+  border:2px solid rgba(91,58,31,.35); background:#fffdf6; color:var(--tinta); resize:vertical;
+}
+textarea:focus,input[type=text]:focus{outline:none; border-color:var(--canela)}
+.perg{margin:16px 0; padding:14px; border-radius:10px; background:rgba(255,255,255,.45); border:1px solid rgba(91,58,31,.2)}
+.perg.vermelha{background:#ffe2dd; border:2px solid #c0392b}
+.perg .enun{font-weight:700; margin-bottom:8px}
+.aviso-copia{background:#fff4cc; border-left:6px solid #e0a800; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#4a3806}
+.aviso-vermelho{background:#ffd9d2; border-left:6px solid #c0392b; padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:14px; color:#7d1f12}
+.modelo{background:#e8f5ee; border-left:6px solid var(--verde); padding:10px 14px; border-radius:8px; margin:10px 0; font-family:system-ui,sans-serif; font-size:15px; color:#123a2b}
+.checklist{font-family:system-ui,sans-serif; font-size:14px; margin-top:8px}
+.checklist .item{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0}
+.checklist .item span{flex:1; min-width:180px}
+.mini{font-size:13px; padding:5px 12px; border-radius:8px; border:1px solid rgba(91,58,31,.4); background:#fff; cursor:pointer; font-family:system-ui,sans-serif}
+.mini.on-sim{background:var(--verde); color:#fff; border-color:var(--verde)}
+.mini.on-nao{background:var(--canela); color:#fff; border-color:var(--canela)}
+
+/* blocos */
+.bloco{margin:22px 0}
+.bloco.trancado .corpo{display:none}
+.bloco .cabeca{display:flex; gap:10px; align-items:center; cursor:pointer}
+.bloco .num{background:var(--ouro); color:var(--tinta); width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex:none}
+.bloco.trancado .num{background:#6c6250; color:#ddd}
+.bloco .status{margin-left:auto; font-size:13px; font-family:system-ui,sans-serif}
+
+/* fixação */
+.fix{margin:10px 0; padding:12px; border-radius:10px; background:rgba(43,29,16,.07); border:1px solid rgba(91,58,31,.25)}
+.fix .alt{display:block; margin:6px 0; padding:8px 12px; border-radius:8px; background:#fffdf6; border:1px solid rgba(91,58,31,.25); cursor:pointer; font-family:system-ui,sans-serif; font-size:15px}
+.fix .alt:hover{background:#fff6e0}
+.fix .alt.escolhida{border-color:var(--canela); background:#ffeede}
+.fix .alt.certa{background:#d6f0e0; border-color:var(--verde)}
+.fix .alt.errada{background:#efe7e4; border-color:#999; opacity:.75}
+.barra{height:12px; background:rgba(0,0,0,.2); border-radius:999px; overflow:hidden; margin:10px 0}
+.barra div{height:100%; background:linear-gradient(90deg,var(--verde),var(--ouro)); width:0; transition:width .4s}
+
+/* capa do relógio */
+.capa-relogio{position:fixed; inset:0; z-index:200; background:rgba(7,36,43,.97); display:flex; align-items:center; justify-content:center; padding:20px}
+.capa-cx{max-width:520px; text-align:center; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:18px; padding:34px 26px}
+.capa-icone{font-size:54px}
+.capa-cx h2{color:var(--ouro2); margin:8px 0 12px}
+.capa-cx p{color:var(--perg2); font-size:16px}
+
+/* modais */
+.modal-bg{position:fixed; inset:0; background:rgba(4,18,22,.85); display:flex; align-items:center; justify-content:center; z-index:300; padding:20px}
+.modal-cx{max-width:520px; width:100%; background:linear-gradient(160deg,var(--mar2),var(--madeira)); border:2px solid var(--ouro); border-radius:16px; padding:24px}
+.modal-cx h3{margin:0 0 10px; color:var(--ouro2)}
+.modal-corpo{color:var(--perg2); font-size:16px}
+.modal-pe{display:flex; gap:10px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap}
+.pausa-relogio{font-size:34px; text-align:center; color:var(--ouro2); font-family:"Courier New",monospace}
+
+/* painel salvar */
+.painel{background:rgba(13,53,64,.85); border:1px solid rgba(217,164,65,.35); border-radius:12px; padding:14px; margin:22px 0; font-family:system-ui,sans-serif; font-size:14px; text-align:center}
+.painel .linha{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+.painel textarea{min-height:120px; margin-top:10px}
+
+/* rodapé de navegação */
+.proximo{text-align:center; margin:32px 0 10px}
+.proximo a{display:inline-block; background:var(--verde); color:#04231a; text-decoration:none; padding:14px 26px; border-radius:12px; font-family:system-ui,sans-serif; font-weight:700}
+
+/* utilitários */
+.centro{text-align:center}
+.pequeno{font-size:14px}
+.oculto{display:none}
+.selo-ok{color:var(--verde2)} .selo-rev{color:#ffb26b}
+ul.limpa{padding-left:20px} ul.limpa li{margin:6px 0}
+@media(max-width:520px){
+  body{font-size:16px}
+  header.topo h1{font-size:24px}
+  .carta{padding:16px}
+}
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="selo">⚓ Rota das Especiarias · Matemática 7º ano</div>
+  <h1>📖 Leitura Estendida com Fixação</h1>
+  <p class="sub">Regra de três · Matemática financeira · Triângulos — prova de 17/09</p>
+</header>
+
+<div class="barra-rel">
+  <span id="rel-tempo">⏱️ 0min 00s</span>
+  <span id="rel-restante">parado</span>
+  <button class="btn btn-2" id="btn-terminar" style="padding:4px 12px;font-size:13px">⏹ Terminar agora</button>
+  <div id="rel-aviso"></div>
+</div>
+
+<div class="wrap">
+  <nav class="abas">
+    <a href="index.html">🏠 Início</a>
+    <a class="ativo" href="leitura.html">📖 Leitura</a>
+    <a href="resumo.html">🗺️ Resumo</a>
+    <a href="simulado.html">📝 Simulado</a>
+  </nav>
+
+  <div class="carta escura">
+    <h2>Como funciona esta viagem</h2>
+    <p>São <b>10 portos</b> (blocos). Em cada porto você <b>lê</b>, faz <b>4 exercícios
+    de fixação</b> e responde <b>3 perguntas escrevendo com as suas palavras</b>.</p>
+    <ul class="limpa">
+      <li>Para abrir o próximo porto, é preciso acertar pelo menos <b>3 dos 4</b> exercícios (70%).</li>
+      <li>As perguntas são para <b>escrever</b>, não para copiar. Copiar trechos do texto trava a conferência.</li>
+      <li>Tudo é salvo sozinho. Você pode fechar e voltar depois.</li>
+    </ul>
+    <div class="barra"><div id="barra-geral"></div></div>
+    <p class="centro pequeno" id="progresso-txt">0 de 10 portos concluídos</p>
+  </div>
+
+  <div id="blocos"></div>
+
+  <div id="final" class="oculto">
+    <div class="carta" style="background:linear-gradient(180deg,#fde3d8,#f7cfc2)">
+      <h2>🚨 As 10 pegadinhas desta prova</h2>
+      <ol id="lista-pegadinhas" class="limpa"></ol>
+    </div>
+
+    <div class="carta escura">
+      <h2>🗂️ O que caiu em cada porto</h2>
+      <table><thead><tr><th>Tópico do conteúdo</th><th>Onde estudei</th></tr></thead>
+      <tbody id="tab-cobertura"></tbody></table>
+    </div>
+
+    <div class="carta escura">
+      <h2>🔁 Para revisar antes da prova</h2>
+      <div id="lista-revisar"></div>
+    </div>
+
+    <div class="proximo"><a href="resumo.html">Próximo material: 🗺️ Resumo →</a></div>
+  </div>
+
+  <div class="painel">
+    <div>💾 Salvamento automático — <span id="salvo-quando">ainda não salvo</span></div>
+    <div class="linha">
+      <button class="btn btn-2" onclick="exportarTudo()">📥 Exportar</button>
+      <button class="btn btn-2" onclick="importarTudo()">📤 Importar</button>
+      <button class="btn btn-2" onclick="zerarTudo()">🗑️ Zerar tudo</button>
+    </div>
+    <div id="caixa-export" style="display:none"><p class="pequeno">Copie este texto e guarde num arquivo:</p><textarea readonly></textarea></div>
+    <div id="caixa-import" style="display:none"><p class="pequeno">Cole aqui o texto do backup:</p><textarea id="area-import"></textarea>
+      <button class="btn btn-1" onclick="confirmarImport()">Restaurar</button></div>
+  </div>
+</div>
+
+<script>
+/* ====== NÚCLEO COMUM — Rota das Especiarias (kit 7º ano Matemática) ====== */
+/* Armazenamento seguro (não quebra se o navegador bloquear) */
+var MEM = {};
+var Store = {
+  get: function (k) {
+    try { var v = localStorage.getItem(k); return v === null ? (MEM[k] === undefined ? null : MEM[k]) : v; }
+    catch (e) { return MEM[k] === undefined ? null : MEM[k]; }
+  },
+  set: function (k, v) {
+    MEM[k] = v;
+    try { localStorage.setItem(k, v); } catch (e) { }
+  },
+  del: function (k) {
+    delete MEM[k];
+    try { localStorage.removeItem(k); } catch (e) { }
+  },
+  getJSON: function (k, def) { var v = this.get(k); if (!v) return def; try { return JSON.parse(v); } catch (e) { return def; } },
+  setJSON: function (k, o) { this.set(k, JSON.stringify(o)); }
+};
+
+/* Modal desenhado na página (nunca alert/confirm/prompt) */
+function modal(titulo, corpoHTML, botoes) {
+  var velho = document.getElementById('modal-bg');
+  if (velho) velho.remove();
+  var bg = document.createElement('div');
+  bg.id = 'modal-bg';
+  bg.className = 'modal-bg';
+  var cx = document.createElement('div');
+  cx.className = 'modal-cx';
+  cx.innerHTML = '<h3>' + titulo + '</h3><div class="modal-corpo">' + corpoHTML + '</div>';
+  var pe = document.createElement('div');
+  pe.className = 'modal-pe';
+  (botoes || [{ texto: 'Fechar' }]).forEach(function (b) {
+    var bt = document.createElement('button');
+    bt.className = 'btn ' + (b.classe || 'btn-2');
+    bt.textContent = b.texto;
+    bt.onclick = function () { bg.remove(); if (b.acao) b.acao(); };
+    pe.appendChild(bt);
+  });
+  cx.appendChild(pe);
+  bg.appendChild(cx);
+  document.body.appendChild(bg);
+  return bg;
+}
+
+/* ====== RELÓGIO DE ESTUDO ====== */
+var RELOGIO = (function () {
+  var KEY = '', MIN_SESSAO = 45, INAT = 180000, PAUSA = 300000;
+  var d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} };
+  var sessaoMs = 0, rodando = false, travado = false, ultimaAtiv = Date.now(), pausadoInat = false;
+  var elTempo, elAviso, timer, fimPausa = 0, inicioSessao = null;
+
+  function fmt(ms) {
+    var s = Math.floor(ms / 1000), m = Math.floor(s / 60), h = Math.floor(m / 60);
+    m = m % 60; s = s % 60;
+    return (h > 0 ? h + 'h ' : '') + m + 'min ' + (s < 10 ? '0' : '') + s + 's';
+  }
+  function salvar() {
+    d.extra = d.extra || {};
+    Store.setJSON(KEY + '_tempo', d);
+  }
+  function pintar() {
+    if (!elTempo) return;
+    elTempo.textContent = '⏱️ ' + fmt(d.ativoMs);
+    var restante = MIN_SESSAO * 60000 - sessaoMs;
+    var elRest = document.getElementById('rel-restante');
+    if (elRest) elRest.textContent = travado ? 'pausa obrigatória' : (rodando ? 'faltam ' + Math.max(0, Math.ceil(restante / 60000)) + ' min nesta sessão' : 'parado');
+  }
+  function marcarAtividade() {
+    ultimaAtiv = Date.now();
+    if (pausadoInat) { pausadoInat = false; esconderAviso(); }
+  }
+  function mostrarAviso(html) {
+    if (!elAviso) return;
+    elAviso.innerHTML = html;
+    elAviso.style.display = 'block';
+  }
+  function esconderAviso() { if (elAviso) elAviso.style.display = 'none'; }
+
+  function tick() {
+    if (!rodando) return;
+    var agora = Date.now();
+    if (travado) {
+      var falta = fimPausa - agora;
+      if (falta <= 0) { destravar(); }
+      else {
+        var mm = Math.floor(falta / 60000), ss = Math.floor((falta % 60000) / 1000);
+        var el = document.getElementById('pausa-contagem');
+        if (el) el.textContent = mm + ':' + (ss < 10 ? '0' : '') + ss;
+      }
+      return;
+    }
+    d.totalMs += 1000;
+    if (agora - ultimaAtiv < INAT) {
+      d.ativoMs += 1000;
+      sessaoMs += 1000;
+    } else if (!pausadoInat) {
+      pausadoInat = true;
+      mostrarAviso('😴 <b>Estudo pausado</b> — toque na tela para continuar.');
+    }
+    if (sessaoMs >= MIN_SESSAO * 60000) travar();
+    if (d.totalMs % 10000 === 0) salvar();
+    pintar();
+  }
+
+  function travar() {
+    travado = true; sessaoMs = 0; fimPausa = Date.now() + PAUSA;
+    var bg = document.createElement('div');
+    bg.id = 'pausa-bg'; bg.className = 'modal-bg';
+    bg.innerHTML = '<div class="modal-cx"><h3>⚓ Hora de ancorar!</h3><div class="modal-corpo">' +
+      '<p>Você estudou <b>' + MIN_SESSAO + ' minutos</b> seguidos. Agora é pausa obrigatória de 5 minutos.</p>' +
+      '<p>Levante, beba água, olhe pela janela. O material volta sozinho.</p>' +
+      '<p class="pausa-relogio">⏳ <span id="pausa-contagem">5:00</span></p></div></div>';
+    document.body.appendChild(bg);
+    salvar();
+  }
+  function destravar() {
+    travado = false;
+    var bg = document.getElementById('pausa-bg');
+    if (bg) bg.remove();
+    marcarAtividade();
+  }
+
+  function comecar() {
+    var capa = document.getElementById('capa-relogio');
+    if (capa) capa.remove();
+    document.body.classList.remove('bloqueado');
+    rodando = true; inicioSessao = new Date().toISOString();
+    marcarAtividade();
+    if (!timer) timer = setInterval(tick, 1000);
+    pintar();
+  }
+
+  function terminar(cb) {
+    modal('⏹ Terminar agora?', '<p>Quer encerrar o estudo agora? O tempo é salvo e, no quiz ou simulado, a tentativa é <b>fechada como está</b> — mesmo com questões em branco.</p>',
+      [{ texto: 'Continuar estudando', classe: 'btn-2' },
+      {
+        texto: 'Sim, terminar', classe: 'btn-1', acao: function () {
+          rodando = false;
+          if (inicioSessao) { d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() }); inicioSessao = null; }
+          salvar(); pintar();
+          if (cb) cb();
+        }
+      }]);
+  }
+
+  return {
+    init: function (opts) {
+      KEY = opts.key;
+      MIN_SESSAO = opts.minutos || 45;
+      d = Store.getJSON(KEY + '_tempo', { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} });
+      d.sessoes = d.sessoes || []; d.extra = d.extra || {};
+      elTempo = document.getElementById('rel-tempo');
+      elAviso = document.getElementById('rel-aviso');
+      document.body.classList.add('bloqueado');
+      var capa = document.createElement('div');
+      capa.id = 'capa-relogio';
+      capa.className = 'capa-relogio';
+      capa.innerHTML = '<div class="capa-cx"><div class="capa-icone">⏱️</div><h2>' + (opts.titulo || 'Pronto para zarpar?') + '</h2>' +
+        '<p>O relógio de estudo conta quanto tempo você estudou de verdade. Cada viagem dura <b>' + MIN_SESSAO + ' minutos</b>, depois vem uma pausa de 5 minutos.</p>' +
+        '<button class="btn btn-1 btn-grande" id="btn-comecar">⛵ Começar a estudar</button></div>';
+      document.body.appendChild(capa);
+      document.getElementById('btn-comecar').onclick = comecar;
+      ['click', 'keydown', 'scroll', 'touchstart', 'input'].forEach(function (ev) {
+        document.addEventListener(ev, marcarAtividade, true);
+      });
+      window.addEventListener('beforeunload', function () {
+        if (inicioSessao) d.sessoes.push({ inicio: inicioSessao, fim: new Date().toISOString() });
+        salvar();
+      });
+      pintar();
+      var bt = document.getElementById('btn-terminar');
+      if (bt) bt.onclick = function () { terminar(opts.aoTerminar); };
+    },
+    extra: function (obj) { d.extra = Object.assign(d.extra || {}, obj); salvar(); },
+    dados: function () { return d; },
+    zerar: function () { d = { totalMs: 0, ativoMs: 0, sessoes: [], extra: {} }; sessaoMs = 0; salvar(); pintar(); },
+    fmt: fmt,
+    _debug: function (o) { if (o && o.restante !== undefined) sessaoMs = MIN_SESSAO * 60000 - o.restante * 1000; if (o && o.inat !== undefined) ultimaAtiv = Date.now() - o.inat * 1000; if (o && o.pausa !== undefined) fimPausa = Date.now() + o.pausa * 1000; },
+    _tick: tick,
+    _comecar: comecar,
+    _travado: function(){ return travado; },
+    _sessao: function(){ return sessaoMs; }
+  };
+})();
+
+/* ====== ANTICÓPIA ====== */
+var Anticopia = (function () {
+  function norm(t) {
+    return (t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/\s+/g, ' ').trim();
+  }
+  function pal(t) { var n = norm(t); return n ? n.split(' ') : []; }
+  /* marca as palavras de A que estão em sequências comuns com B de tamanho >= min */
+  function marcar(a, b, min) {
+    var marcas = new Array(a.length).fill(0), maior = 0;
+    var prev = new Array(b.length + 1).fill(0);
+    for (var i = 0; i < a.length; i++) {
+      var cur = new Array(b.length + 1).fill(0);
+      for (var j = 0; j < b.length; j++) {
+        if (a[i] === b[j]) {
+          cur[j + 1] = prev[j] + 1;
+          if (cur[j + 1] > maior) maior = cur[j + 1];
+          if (cur[j + 1] >= min) {
+            for (var k = 0; k < cur[j + 1]; k++) marcas[i - k] = 1;
+          }
+        }
+      }
+      prev = cur;
+    }
+    return { marcas: marcas, maior: maior };
+  }
+  return {
+    /* true = a resposta é transcrição do texto do bloco */
+    ehCopia: function (resposta, textoBloco, pergunta) {
+      var r = pal(resposta);
+      if (r.length < 6) return false;
+      var citacao = marcar(r, pal(pergunta || ''), 4).marcas;
+      var livres = [], mapa = [];
+      for (var i = 0; i < r.length; i++) { if (!citacao[i]) { livres.push(r[i]); mapa.push(i); } }
+      if (livres.length < 6) return false;
+      var t = pal(textoBloco);
+      var m8 = marcar(livres, t, 8);
+      if (m8.maior >= 8) return true;
+      var m5 = marcar(livres, t, 5);
+      var soma = m5.marcas.reduce(function (x, y) { return x + y; }, 0);
+      return (soma / livres.length) > 0.6;
+    },
+    _norm: norm
+  };
+})();
+
+/* ====== PAINEL DE SALVAMENTO ====== */
+function painelSalvar(KEY, coletar, restaurar, aoZerar) {
+  function carimbo() {
+    var q = Store.get(KEY + '_quando');
+    var el = document.getElementById('salvo-quando');
+    if (el) el.textContent = q ? 'último salvamento: ' + q : 'ainda não salvo';
+  }
+  window.salvarAgora = function () {
+    Store.setJSON(KEY, coletar());
+    Store.set(KEY + '_quando', new Date().toLocaleString('pt-BR'));
+    carimbo();
+  };
+  window.exportarTudo = function () {
+    var pacote = { chave: KEY, dados: Store.getJSON(KEY, {}), tempo: Store.getJSON(KEY + '_tempo', {}), quando: Store.get(KEY + '_quando') };
+    var txt = JSON.stringify(pacote, null, 2);
+    var cx = document.getElementById('caixa-export');
+    cx.style.display = 'block';
+    cx.querySelector('textarea').value = txt;
+    cx.querySelector('textarea').select();
+  };
+  window.importarTudo = function () {
+    var cx = document.getElementById('caixa-import');
+    cx.style.display = 'block';
+  };
+  window.confirmarImport = function () {
+    var txt = document.getElementById('area-import').value;
+    try {
+      var p = JSON.parse(txt);
+      if (p.dados) Store.setJSON(KEY, p.dados);
+      if (p.tempo) Store.setJSON(KEY + '_tempo', p.tempo);
+      if (p.quando) Store.set(KEY + '_quando', p.quando);
+      modal('✅ Importado', '<p>Os dados voltaram. A página vai recarregar.</p>', [{ texto: 'Ok', classe: 'btn-1', acao: function () { location.reload(); } }]);
+    } catch (e) {
+      modal('❌ Não deu', '<p>Esse texto não parece um arquivo de backup válido.</p>', [{ texto: 'Ok', classe: 'btn-1' }]);
+    }
+  };
+  window.zerarTudo = function () {
+    modal('🗑️ Zerar tudo?', '<p>Isso apaga todas as respostas <b>e o tempo de estudo</b> deste material. Não dá para desfazer.</p>',
+      [{ texto: 'Cancelar', classe: 'btn-2' },
+      {
+        texto: 'Sim, apagar', classe: 'btn-1', acao: function () {
+          Store.del(KEY); Store.del(KEY + '_quando'); Store.del(KEY + '_tempo');
+          if (aoZerar) aoZerar();
+          location.reload();
+        }
+      }]);
+  };
+  carimbo();
+  if (restaurar) restaurar(Store.getJSON(KEY, null));
+  setInterval(function () { window.salvarAgora(); }, 15000);
+}
+
+
+var D = {"blocos": [{"cap": "Cap. 07 — Regra de três", "titulo": "O primeiro porto: razão e proporção", "texto": "\n<p>Toda viagem de comércio começa com uma comparação: quantos sacos de canela valem\nquantos sacos de pimenta? Quando comparamos duas quantidades usando <b>divisão</b>,\nessa comparação se chama <b>razão</b>. A razão entre 4 e 6 é escrita como 4/6 e lida\ncomo \"4 para 6\". Nada de mistério: razão é só uma divisão com um nome bonito.</p>\n\n<p>Quando duas razões são <b>iguais</b>, dizemos que elas formam uma <b>proporção</b>.\nPor exemplo, 4/6 e 10/15 valem a mesma coisa, então podemos escrever 4/6 = 10/15.\nNuma proporção escrita como a/b = c/d, os números das pontas (a e d) são chamados de\n<b>extremos</b> e os do meio (b e c) são os <b>meios</b>.</p>\n\n<p>A grande ferramenta que vem daí é a <b>propriedade fundamental das proporções</b>:\no produto dos meios é igual ao produto dos extremos. Ou seja, se a/b = c/d, então\na · d = b · c. É isso que transforma uma proporção com um valor desconhecido numa\ncontinha simples de resolver.</p>\n\n<div class=\"formula\">a/b = c/d &nbsp;&nbsp;⇒&nbsp;&nbsp; a · d = b · c</div>\n\n<p>Veja: em 4/6 = x/15, multiplicamos em cruz e ficamos com 6 · x = 4 · 15, ou seja,\n6x = 60 e portanto x = 10. Um detalhe que derruba muita gente: cada grandeza precisa\nestar sempre na <b>mesma unidade</b> dos dois lados. Não dá para misturar minutos de\num lado com horas do outro.</p>\n", "puro": "\n Toda viagem de comércio começa com uma comparação: quantos sacos de canela valem\nquantos sacos de pimenta? Quando comparamos duas quantidades usando  divisão ,\nessa comparação se chama  razão . A razão entre 4 e 6 é escrita como 4/6 e lida\ncomo \"4 para 6\". Nada de mistério: razão é só uma divisão com um nome bonito. \n\n Quando duas razões são  iguais , dizemos que elas formam uma  proporção .\nPor exemplo, 4/6 e 10/15 valem a mesma coisa, então podemos escrever 4/6 = 10/15.\nNuma proporção escrita como a/b = c/d, os números das pontas (a e d) são chamados de\n extremos  e os do meio (b e c) são os  meios . \n\n A grande ferramenta que vem daí é a  propriedade fundamental das proporções :\no produto dos meios é igual ao produto dos extremos. Ou seja, se a/b = c/d, então\na · d = b · c. É isso que transforma uma proporção com um valor desconhecido numa\ncontinha simples de resolver. \n\n a/b = c/d &nbsp;&nbsp;⇒&nbsp;&nbsp; a · d = b · c \n\n Veja: em 4/6 = x/15, multiplicamos em cruz e ficamos com 6 · x = 4 · 15, ou seja,\n6x = 60 e portanto x = 10. Um detalhe que derruba muita gente: cada grandeza precisa\nestar sempre na  mesma unidade  dos dois lados. Não dá para misturar minutos de\num lado com horas do outro. \n", "fix": [{"p": "Na proporção 3/5 = 12/20, quais números são os <b>meios</b>?", "alts": ["5 e 12", "5 e 20", "3 e 12", "3 e 20"], "certa": 0, "expl": "Meios são os dois números 'de dentro' (b e c). Extremos são os das pontas: 3 e 20."}, {"p": "Resolva a proporção 2/x = 3/19,5.", "alts": ["x = 11,7", "x = 13", "x = 6,5", "x = 29,25"], "certa": 1, "expl": "Multiplicando em cruz: x · 3 = 2 · 19,5 → 3x = 39 → x = 13."}, {"p": "Se a/b = c/d, o que a propriedade fundamental garante?", "alts": ["a + d = b + c", "a · b = c · d", "a · c = b · d", "a · d = b · c"], "certa": 3, "expl": "O produto dos extremos (a e d) é igual ao produto dos meios (b e c)."}, {"p": "Uma receita usa 3 xícaras de farinha para 2 de açúcar. A razão farinha para açúcar é:", "alts": ["2/3", "3/2", "5/2", "3/5"], "certa": 1, "expl": "A razão é a divisão na ordem pedida: farinha (3) dividido por açúcar (2) = 3/2."}], "perg": [{"q": "Com as suas palavras (sem copiar o texto), explique o que é uma proporção e para que serve a propriedade fundamental.", "modelo": "Proporção é quando duas razões (duas divisões) dão o mesmo resultado, e a gente escreve uma igual à outra. A propriedade fundamental serve para achar um valor que está faltando: multiplico em cruz e resolvo a conta.", "checks": ["Minha resposta disse que proporção é a igualdade entre duas razões?", "Minha resposta disse que a propriedade fundamental serve para achar o valor desconhecido?", "Minha resposta falou em multiplicar em cruz (meios e extremos)?"], "tipo": "conceitual"}, {"q": "Invente uma proporção sua, com números DIFERENTES dos que aparecem no texto, e mostre com as contas que o produto dos meios é igual ao produto dos extremos.", "modelo": "Exemplo: 2/7 = 6/21. Meios: 7 · 6 = 42. Extremos: 2 · 21 = 42. Os dois produtos deram 42, então é mesmo uma proporção.", "checks": ["Escrevi uma proporção com números meus, diferentes do texto?", "Calculei o produto dos meios e o dos extremos?", "Mostrei que os dois produtos deram o mesmo número?"], "tipo": "aplicacao"}, {"q": "Na proporção 5/8 = 15/x, encontre o valor de x e escreva o passo a passo como se estivesse ensinando um colega mais novo.", "modelo": "Multiplico em cruz: 5 · x = 8 · 15. Isso dá 5x = 120. Depois divido os dois lados por 5: x = 120 ÷ 5 = 24. Então x = 24.", "checks": ["Multipliquei em cruz (5 · x = 8 · 15)?", "Cheguei em x = 24?", "Expliquei o passo a passo, e não só o resultado?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 07 — Regra de três", "titulo": "Vento a favor: grandezas diretamente proporcionais", "texto": "\n<p>Duas grandezas são <b>diretamente proporcionais</b> (DP) quando uma aumenta e a\noutra aumenta junto, sempre na mesma razão. Se uma dobra, a outra dobra. Se uma cai\npela metade, a outra cai pela metade também. É o vento a favor: as duas caminham no\nmesmo sentido.</p>\n\n<p>Um exemplo clássico é tinta e parede. Se 2 latas de tinta pintam 3 m², quanto mais\nlatas o pintor comprar, maior a área que ele consegue pintar. Para descobrir quantas\nlatas são necessárias para 19,5 m², montamos a tabela e escrevemos a proporção na\n<b>mesma ordem</b> em que os valores aparecem:</p>\n\n<div class=\"formula\">2/x = 3/19,5 &nbsp;→&nbsp; 3x = 39 &nbsp;→&nbsp; x = 13 latas</div>\n\n<p>Repare que não invertemos nada. Em grandezas diretamente proporcionais, as setas\nda tabela apontam para o <b>mesmo lado</b> e a proporção é escrita direto, na ordem\nnatural. São DP, por exemplo: quantidade de produto e preço total, distância\npercorrida e gasolina gasta, número de trabalhadores e quantidade de serviço feito no\nmesmo tempo.</p>\n\n<p>Um teste rápido que quase nunca falha: pergunte \"se eu aumentar essa grandeza, a\noutra aumenta ou diminui?\". Se a resposta for <i>aumenta</i>, são diretamente\nproporcionais.</p>\n", "puro": "\n Duas grandezas são  diretamente proporcionais  (DP) quando uma aumenta e a\noutra aumenta junto, sempre na mesma razão. Se uma dobra, a outra dobra. Se uma cai\npela metade, a outra cai pela metade também. É o vento a favor: as duas caminham no\nmesmo sentido. \n\n Um exemplo clássico é tinta e parede. Se 2 latas de tinta pintam 3 m², quanto mais\nlatas o pintor comprar, maior a área que ele consegue pintar. Para descobrir quantas\nlatas são necessárias para 19,5 m², montamos a tabela e escrevemos a proporção na\n mesma ordem  em que os valores aparecem: \n\n 2/x = 3/19,5 &nbsp;→&nbsp; 3x = 39 &nbsp;→&nbsp; x = 13 latas \n\n Repare que não invertemos nada. Em grandezas diretamente proporcionais, as setas\nda tabela apontam para o  mesmo lado  e a proporção é escrita direto, na ordem\nnatural. São DP, por exemplo: quantidade de produto e preço total, distância\npercorrida e gasolina gasta, número de trabalhadores e quantidade de serviço feito no\nmesmo tempo. \n\n Um teste rápido que quase nunca falha: pergunte \"se eu aumentar essa grandeza, a\noutra aumenta ou diminui?\". Se a resposta for  aumenta , são diretamente\nproporcionais. \n", "fix": [{"p": "Se 4 cadernos custam R$ 20,00, quanto custam 10 cadernos iguais?", "alts": ["R$ 50,00", "R$ 8,00", "R$ 80,00", "R$ 40,00"], "certa": 0, "expl": "4/10 = 20/x → 4x = 200 → x = 50. Mais cadernos, mais dinheiro: são DP."}, {"p": "Um automóvel gasta 42 litros de gasolina para percorrer 504 km. Para 144 km ele gastará:", "alts": ["10 litros", "21 litros", "14 litros", "12 litros"], "certa": 3, "expl": "42/504 = x/144 → 504x = 6 048 → x = 12 litros."}, {"p": "Qual destes pares é de grandezas DIRETAMENTE proporcionais?", "alts": ["Número de pedreiros e dias para terminar a obra", "Distância percorrida e gasolina consumida", "Número de torneiras e tempo para encher a piscina", "Velocidade e tempo no mesmo percurso"], "certa": 1, "expl": "Quanto maior a distância, maior o gasto de gasolina: as duas crescem juntas. Os outros três pares são inversamente proporcionais."}, {"p": "Em grandezas diretamente proporcionais, se uma delas triplica, a outra:", "alts": ["dobra", "cai para um terço", "também triplica", "fica igual"], "certa": 2, "expl": "Em DP as duas grandezas variam na mesma razão: triplicou uma, triplica a outra."}], "perg": [{"q": "Um automóvel gasta 42 litros para percorrer 504 km. Monte a proporção e calcule quantos litros ele gasta em 144 km. Escreva as contas.", "modelo": "42 litros — 504 km e x litros — 144 km. Como são DP, escrevo direto: 42/x = 504/144. Multiplicando em cruz: 504x = 42 · 144 = 6 048, então x = 6 048 ÷ 504 = 12 litros.", "checks": ["Montei a proporção com os valores na mesma ordem?", "Multipliquei em cruz e mostrei a conta?", "Cheguei em 12 litros?"], "tipo": "aplicacao"}, {"q": "Pense em algo do SEU dia a dia (que não esteja no texto) com duas grandezas diretamente proporcionais. Descreva a situação e explique por que elas são DP.", "modelo": "Exemplo: o tempo que eu ando de bicicleta e a distância percorrida, se eu mantiver a mesma velocidade. Se eu pedalar o dobro do tempo, percorro o dobro da distância, então as duas crescem juntas na mesma razão.", "checks": ["Descrevi uma situação minha, que não está no texto?", "Disse quais são as duas grandezas?", "Expliquei que quando uma aumenta a outra aumenta na mesma razão?"], "tipo": "aplicacao"}, {"q": "Sem fazer nenhuma conta, escreva duas perguntas que você pode fazer a si mesma para descobrir se duas grandezas são diretamente proporcionais.", "modelo": "Pergunta 1: se eu aumentar a primeira grandeza, a segunda aumenta junto? Pergunta 2: se eu dobrar a primeira, a segunda também dobra? Se as duas respostas forem sim, são diretamente proporcionais.", "checks": ["Escrevi duas perguntas, e não apenas uma?", "As perguntas testam se as grandezas crescem juntas?", "Escrevi com as minhas palavras?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 07 — Regra de três", "titulo": "Vento contra: grandezas inversamente proporcionais", "texto": "\n<p>Agora o vento vira. Duas grandezas são <b>inversamente proporcionais</b> (IP)\nquando uma aumenta e a outra <b>diminui</b>. Mais trabalhadores na obra, menos dias\npara terminar. Mais velocidade na estrada, menos tempo de viagem. Mais torneiras\nabertas, menos tempo para encher o tanque.</p>\n\n<p>O livro traz o caso da pintura: com 4 trabalhadores a casa fica pronta em 15 dias.\nSe o dono contrata mais dois pintores, passando para 6 trabalhadores, quanto tempo\nleva? Como aumentar gente <b>diminui</b> o tempo, as grandezas são inversamente\nproporcionais.</p>\n\n<p>Aí está a única diferença no modo de resolver: antes de multiplicar em cruz, a\ngente <b>inverte a segunda razão</b>. Fica assim:</p>\n\n<div class=\"formula\">4/6 = x/15 &nbsp;→&nbsp; 6x = 60 &nbsp;→&nbsp; x = 10 dias</div>\n\n<p>Outro jeito de enxergar: em grandezas inversamente proporcionais, o\n<b>produto</b> dos valores de cada linha é sempre o mesmo. Aqui, 4 · 15 = 60 e\n6 · 10 = 60. Se você preferir, pode resolver assim e chegar no mesmo lugar.</p>\n", "puro": "\n Agora o vento vira. Duas grandezas são  inversamente proporcionais  (IP)\nquando uma aumenta e a outra  diminui . Mais trabalhadores na obra, menos dias\npara terminar. Mais velocidade na estrada, menos tempo de viagem. Mais torneiras\nabertas, menos tempo para encher o tanque. \n\n O livro traz o caso da pintura: com 4 trabalhadores a casa fica pronta em 15 dias.\nSe o dono contrata mais dois pintores, passando para 6 trabalhadores, quanto tempo\nleva? Como aumentar gente  diminui  o tempo, as grandezas são inversamente\nproporcionais. \n\n Aí está a única diferença no modo de resolver: antes de multiplicar em cruz, a\ngente  inverte a segunda razão . Fica assim: \n\n 4/6 = x/15 &nbsp;→&nbsp; 6x = 60 &nbsp;→&nbsp; x = 10 dias \n\n Outro jeito de enxergar: em grandezas inversamente proporcionais, o\n produto  dos valores de cada linha é sempre o mesmo. Aqui, 4 · 15 = 60 e\n6 · 10 = 60. Se você preferir, pode resolver assim e chegar no mesmo lugar. \n", "fix": [{"p": "Um caminhão de 3 toneladas faz 15 viagens para levar toda a areia. Com um caminhão de 5 toneladas, o número de viagens será:", "alts": ["12 viagens", "6 viagens", "25 viagens", "9 viagens"], "certa": 3, "expl": "Caminhão maior, menos viagens: IP. 3 · 15 = 5 · x → 45 = 5x → x = 9."}, {"p": "Quinze homens fazem um trabalho em 10 dias. Para fazer o mesmo trabalho em 6 dias, são necessários:", "alts": ["30 homens", "25 homens", "9 homens", "20 homens"], "certa": 1, "expl": "Menos dias exige mais gente: IP. 15 · 10 = x · 6 → 150 = 6x → x = 25."}, {"p": "Em grandezas inversamente proporcionais, se uma delas dobra, a outra:", "alts": ["cai pela metade", "fica igual", "triplica", "também dobra"], "certa": 0, "expl": "Em IP, quando uma cresce a outra diminui na mesma proporção: dobrou uma, a outra vira metade."}, {"p": "Qual é a ÚNICA diferença no modo de resolver uma regra de três inversa?", "alts": ["Trocar a unidade de medida", "Dividir o resultado final por 2", "Inverter a segunda razão antes de multiplicar em cruz", "Somar as grandezas em vez de multiplicar"], "certa": 2, "expl": "Todo o resto é igual: organizar os dados, montar a proporção e resolver. Só a segunda razão é invertida."}], "perg": [{"q": "Quinze homens fazem um trabalho em 10 dias. Quantos homens são necessários para fazer o mesmo trabalho em 6 dias? Mostre a conta e diga por que é uma regra de três inversa.", "modelo": "É inversa porque, para terminar em menos dias, preciso de mais gente. Usando o produto constante: 15 · 10 = x · 6, ou seja, 150 = 6x, então x = 25 homens.", "checks": ["Expliquei por que é inversamente proporcional?", "Mostrei a conta (15 · 10 = x · 6 ou a proporção invertida)?", "Cheguei em 25 homens?"], "tipo": "aplicacao"}, {"q": "Crie um problema SEU de grandezas inversamente proporcionais (que não esteja no texto), com números à sua escolha, e resolva.", "modelo": "Exemplo: 3 torneiras iguais enchem uma caixa d'água em 8 horas. Com 4 torneiras, quanto tempo leva? Mais torneiras, menos tempo: IP. 3 · 8 = 4 · x → 24 = 4x → x = 6 horas.", "checks": ["Inventei uma situação que não está no texto?", "A situação é mesmo inversa (uma cresce e a outra diminui)?", "Resolvi e cheguei a um resultado?"], "tipo": "aplicacao"}, {"q": "Um colega resolveu o problema dos pintores (4 trabalhadores em 15 dias, e depois 6 trabalhadores) escrevendo 4/6 = 15/x e achou 22,5 dias. Explique onde ele errou e qual é a resposta certa.", "modelo": "Ele tratou como se fosse diretamente proporcional e não inverteu a segunda razão. Como mais pintores significa menos dias, o certo é 4/6 = x/15, que dá 6x = 60 e x = 10 dias. Além disso, 22,5 dias não faz sentido: com mais gente o tempo tem que diminuir, não aumentar.", "checks": ["Disse que ele esqueceu de inverter a razão?", "Dei a resposta certa (10 dias)?", "Comentei que o resultado dele não fazia sentido porque o tempo aumentou?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 07 — Regra de três", "titulo": "A carta náutica: os três passos da regra de três", "texto": "\n<p>Toda regra de três se resolve com os mesmos <b>três passos</b>. Decorar a sequência\nvale mais do que decorar exemplo.</p>\n\n<p><b>1º passo — organizar e agrupar os dados.</b> Monte uma tabelinha com duas\ncolunas, uma para cada grandeza, colocando na mesma coluna valores da mesma espécie.\nÉ aqui que você confere as <b>unidades</b>: minutos com minutos, horas com horas,\nreais com reais.</p>\n\n<p><b>2º passo — identificar se são DP ou IP.</b> Pergunte: aumentando a primeira\ngrandeza, a segunda aumenta (DP) ou diminui (IP)? Anote a resposta antes de escrever\nqualquer conta, porque é ela que decide se você inverte ou não.</p>\n\n<p><b>3º passo — escrever e resolver a proporção.</b> Se for DP, escreva na ordem em\nque os valores aparecem. Se for IP, inverta a segunda razão. Depois aplique a\npropriedade fundamental e resolva.</p>\n\n<div class=\"formula\">organizar &nbsp;→&nbsp; identificar DP ou IP &nbsp;→&nbsp; montar e resolver</div>\n\n<p>Exemplo com pegadinha de unidade: um corredor de kart dá uma volta em\n4 minutos e 30 segundos a 80 km/h. A 100 km/h, quanto tempo leva? Primeiro converta:\n4 min 30 s = 4,5 min. Mais velocidade, menos tempo, então é IP:\n80 · 4,5 = 100 · x, ou seja, 360 = 100x e x = 3,6 min, que são 3 minutos e\n36 segundos.</p>\n", "puro": "\n Toda regra de três se resolve com os mesmos  três passos . Decorar a sequência\nvale mais do que decorar exemplo. \n\n  1º passo — organizar e agrupar os dados.  Monte uma tabelinha com duas\ncolunas, uma para cada grandeza, colocando na mesma coluna valores da mesma espécie.\nÉ aqui que você confere as  unidades : minutos com minutos, horas com horas,\nreais com reais. \n\n  2º passo — identificar se são DP ou IP.  Pergunte: aumentando a primeira\ngrandeza, a segunda aumenta (DP) ou diminui (IP)? Anote a resposta antes de escrever\nqualquer conta, porque é ela que decide se você inverte ou não. \n\n  3º passo — escrever e resolver a proporção.  Se for DP, escreva na ordem em\nque os valores aparecem. Se for IP, inverta a segunda razão. Depois aplique a\npropriedade fundamental e resolva. \n\n organizar &nbsp;→&nbsp; identificar DP ou IP &nbsp;→&nbsp; montar e resolver \n\n Exemplo com pegadinha de unidade: um corredor de kart dá uma volta em\n4 minutos e 30 segundos a 80 km/h. A 100 km/h, quanto tempo leva? Primeiro converta:\n4 min 30 s = 4,5 min. Mais velocidade, menos tempo, então é IP:\n80 · 4,5 = 100 · x, ou seja, 360 = 100x e x = 3,6 min, que são 3 minutos e\n36 segundos. \n", "fix": [{"p": "Um ônibus a 90 km/h faz o percurso em 4 horas. Aumentando para 120 km/h, o tempo passa a ser:", "alts": ["3,5 horas", "2 horas", "3 horas", "5 horas"], "certa": 2, "expl": "Mais velocidade, menos tempo: IP. 90 · 4 = 120 · x → 360 = 120x → x = 3 horas."}, {"p": "Uma torneira despeja 50 litros em 20 minutos. Para despejar 600 litros, ela levará:", "alts": ["240 horas", "4 horas", "2 horas", "40 minutos"], "certa": 1, "expl": "DP: 50/600 = 20/x → 50x = 12 000 → x = 240 minutos, que são 4 horas. Cuidado: a pergunta pede HORAS."}, {"p": "Antes de montar a proporção, o passo que evita a maior parte dos erros é:", "alts": ["arredondar os números para facilitar", "escrever sempre a incógnita do lado esquerdo", "deixar as duas grandezas na mesma unidade", "somar as duas grandezas para conferir"], "certa": 2, "expl": "Misturar minutos com horas, ou gramas com quilos, é a causa mais comum de erro na regra de três."}, {"p": "Mariana resolveu 24 desafios em 1 hora e Beatriz resolveu 14 desafios em 0,5 hora, e as duas mantêm o ritmo. Para resolver 42 desafios, quem termina primeiro?", "alts": ["As duas empatam", "Mariana, porque teve o dobro de tempo", "Mariana, porque fez mais desafios no total", "Beatriz, porque faz 28 desafios por hora"], "certa": 3, "expl": "Beatriz faz 14 em meia hora, ou seja, 28 por hora, contra 24 por hora de Mariana. Ela leva 1,5 h para os 42 desafios, e Mariana leva 1,75 h."}], "perg": [{"q": "Uma torneira despeja 50 litros em 20 minutos. Quantas HORAS ela leva para despejar 600 litros? Escreva o passo a passo e destaque onde está a pegadinha.", "modelo": "Passo 1: 50 litros — 20 min; 600 litros — x min. Passo 2: mais litros, mais tempo, então é DP. Passo 3: 50/600 = 20/x → 50x = 12 000 → x = 240 minutos. A pegadinha é que a pergunta pede horas: 240 ÷ 60 = 4 horas.", "checks": ["Montei a proporção e achei 240 minutos?", "Converti para 4 horas?", "Falei que a pegadinha era a unidade pedida?"], "tipo": "aplicacao"}, {"q": "O corredor de kart faz a volta em 4 minutos e 30 segundos a 80 km/h. Explique por que esse problema é inversamente proporcional e calcule o tempo a 100 km/h.", "modelo": "É inverso porque, andando mais rápido no mesmo percurso, ele gasta menos tempo. Convertendo, 4 min 30 s = 4,5 min. Então 80 · 4,5 = 100 · x → 360 = 100x → x = 3,6 min, ou 3 minutos e 36 segundos.", "checks": ["Expliquei que mais velocidade significa menos tempo?", "Converti 4 min 30 s para 4,5 min?", "Cheguei em 3,6 min (3 min e 36 s)?"], "tipo": "aplicacao"}, {"q": "Invente uma pegadinha de unidade para uma questão de regra de três (por exemplo, misturando gramas e quilos) e explique como um colega pode evitar cair nela.", "modelo": "Exemplo: 'Se 500 g de queijo custam R$ 20,00, quanto custam 3 kg?'. A pegadinha é comparar gramas com quilos. Para não cair, o colega deve transformar tudo na mesma unidade antes: 3 kg = 3 000 g. Aí monta 500/3 000 = 20/x e acha x = 120 reais.", "checks": ["Criei uma situação com duas unidades diferentes?", "Expliquei qual é a armadilha?", "Disse que a solução é converter tudo para a mesma unidade antes de montar?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 08 — Matemática financeira", "titulo": "O peso do ouro: porcentagem e acréscimo", "texto": "\n<p><b>Porcentagem</b> é uma razão com denominador 100. Quando lemos 8%, estamos lendo\n8/100, que também pode ser escrito como 0,08. Essa troca entre as três formas\n(porcentagem, fração e número decimal) é o que faz as contas ficarem rápidas.</p>\n\n<p>Para calcular um <b>acréscimo</b>, há dois caminhos e os dois valem nota. O\ncaminho longo: calcule quanto vale a porcentagem e some ao valor original. Uma\nbicicleta de R$ 800,00 com aumento de 8% sobe 800 · 0,08 = R$ 64,00, então passa a\ncustar 800 + 64 = R$ 864,00.</p>\n\n<p>O caminho curto usa o <b>fator de multiplicação</b>. Aumentar 8% é o mesmo que\nmultiplicar por 1,08, porque você fica com os 100% que já tinha mais os 8% novos.</p>\n\n<div class=\"formula\">novo preço = preço × (1 + taxa) &nbsp;&nbsp;|&nbsp;&nbsp; +8% → × 1,08</div>\n\n<p>Confira com os exemplos do livro: um chuveiro de R$ 115,00 com 12% de aumento vira\n115 · 1,12 = R$ 128,80. Um livro de R$ 35,00 com 30% vira 35 · 1,30 = R$ 45,50. E um\njogo de R$ 85,50 com 32% vira 85,50 · 1,32 = R$ 112,86. Sempre o mesmo movimento: some\na taxa a 1 e multiplique.</p>\n", "puro": "\n  Porcentagem  é uma razão com denominador 100. Quando lemos 8%, estamos lendo\n8/100, que também pode ser escrito como 0,08. Essa troca entre as três formas\n(porcentagem, fração e número decimal) é o que faz as contas ficarem rápidas. \n\n Para calcular um  acréscimo , há dois caminhos e os dois valem nota. O\ncaminho longo: calcule quanto vale a porcentagem e some ao valor original. Uma\nbicicleta de R$ 800,00 com aumento de 8% sobe 800 · 0,08 = R$ 64,00, então passa a\ncustar 800 + 64 = R$ 864,00. \n\n O caminho curto usa o  fator de multiplicação . Aumentar 8% é o mesmo que\nmultiplicar por 1,08, porque você fica com os 100% que já tinha mais os 8% novos. \n\n novo preço = preço × (1 + taxa) &nbsp;&nbsp;|&nbsp;&nbsp; +8% → × 1,08 \n\n Confira com os exemplos do livro: um chuveiro de R$ 115,00 com 12% de aumento vira\n115 · 1,12 = R$ 128,80. Um livro de R$ 35,00 com 30% vira 35 · 1,30 = R$ 45,50. E um\njogo de R$ 85,50 com 32% vira 85,50 · 1,32 = R$ 112,86. Sempre o mesmo movimento: some\na taxa a 1 e multiplique. \n", "fix": [{"p": "Uma bicicleta de R$ 800,00 sofre um acréscimo de 8%. O novo preço é:", "alts": ["R$ 808,00", "R$ 864,80", "R$ 864,00", "R$ 880,00"], "certa": 2, "expl": "800 · 1,08 = 864. Ou então: 8% de 800 = 64, e 800 + 64 = 864."}, {"p": "Qual é o fator de multiplicação para um aumento de 32%?", "alts": ["0,68", "1,32", "0,32", "3,2"], "certa": 1, "expl": "Aumento: some a taxa a 1. 100% + 32% = 132% = 1,32."}, {"p": "Um chuveiro de R$ 115,00 sofre acréscimo de 12%. O novo preço é:", "alts": ["R$ 138,00", "R$ 127,00", "R$ 128,80", "R$ 101,20"], "certa": 2, "expl": "115 · 0,12 = 13,80. Somando: 115 + 13,80 = R$ 128,80."}, {"p": "Um livro de R$ 35,00 sofre acréscimo de 30%. O novo preço é:", "alts": ["R$ 38,00", "R$ 24,50", "R$ 45,50", "R$ 65,00"], "certa": 2, "expl": "30% de 35 = 10,50. Somando: 35 + 10,50 = R$ 45,50."}], "perg": [{"q": "Um jogo custa R$ 85,50 e vai sofrer um acréscimo de 32%. Calcule o novo preço pelos DOIS caminhos (o longo e o do fator) e mostre que dão o mesmo resultado.", "modelo": "Caminho longo: 32% de 85,50 = 85,50 · 0,32 = 27,36. Somando: 85,50 + 27,36 = R$ 112,86. Caminho do fator: 85,50 · 1,32 = R$ 112,86. Os dois deram o mesmo valor.", "checks": ["Calculei a parte (R$ 27,36) e somei ao preço?", "Usei também o fator 1,32?", "Cheguei a R$ 112,86 nos dois caminhos?"], "tipo": "aplicacao"}, {"q": "Invente um produto e um preço seus, escolha uma porcentagem de aumento e calcule o novo preço usando o fator de multiplicação. Mostre a conta.", "modelo": "Exemplo: um fone que custa R$ 120,00 com aumento de 25%. O fator é 1,25. Então 120 · 1,25 = R$ 150,00. O fone passa a custar R$ 150,00.", "checks": ["Escolhi um produto e um preço meus?", "Escrevi qual é o fator de multiplicação?", "Mostrei a conta e o preço final?"], "tipo": "aplicacao"}, {"q": "Explique, com as suas palavras, por que multiplicar por 1,12 dá o mesmo resultado que calcular 12% e somar ao valor.", "modelo": "Porque o valor que eu já tenho é 100% dele mesmo, ou seja, 1. Quando aumento 12%, fico com 100% + 12% = 112%, que escrito em número é 1,12. Então multiplicar por 1,12 já faz a soma de uma vez.", "checks": ["Falei que o valor original vale 100%, ou seja, 1?", "Falei que somar a taxa dá 112%?", "Expliquei que o fator já faz a soma numa conta só?"], "tipo": "conceitual"}]}, {"cap": "Cap. 08 — Matemática financeira", "titulo": "A feira dos descontos: decréscimo", "texto": "\n<p>O <b>decréscimo</b> funciona igualzinho ao acréscimo, só que na direção contrária.\nNo caminho longo, você calcula a porcentagem e <b>subtrai</b>. No caminho do fator,\nvocê <b>tira</b> a taxa de 1.</p>\n\n<div class=\"formula\">novo preço = preço × (1 − taxa) &nbsp;&nbsp;|&nbsp;&nbsp; −15% → × 0,85</div>\n\n<p>Uma assinatura de streaming de R$ 40,00 com 15% de desconto: 40 · 0,15 = R$ 6,00 de\ndesconto, então o cliente paga 40 − 6 = R$ 34,00. Pelo fator, 40 · 0,85 = R$ 34,00\ndireto. Um tênis de R$ 280,00 com 4% de desconto cai para 280 · 0,96 = R$ 268,80. Uma\nluminária de R$ 75,90 com 20% cai para 75,90 · 0,80 = R$ 60,72. E um jogo de panelas de\nR$ 420,00 na Black Friday com 40% de desconto sai por 420 · 0,60 = R$ 252,00.</p>\n\n<p>A mesma ideia serve para salários e outras quantias. Se Ana Maria recebe\nR$ 2 700,00 e Marcos recebe 28% a menos, o salário dele é 2 700 · 0,72 = R$ 1 944,00.\nJá Eduardo, que recebe 20% a mais, ganha 2 700 · 1,20 = R$ 3 240,00.</p>\n\n<p>Atenção à armadilha mais famosa: aumentar 10% e depois dar 10% de desconto\n<b>não</b> devolve o preço original. Isso acontece porque a segunda porcentagem é\ncalculada sobre um valor diferente do primeiro.</p>\n", "puro": "\n O  decréscimo  funciona igualzinho ao acréscimo, só que na direção contrária.\nNo caminho longo, você calcula a porcentagem e  subtrai . No caminho do fator,\nvocê  tira  a taxa de 1. \n\n novo preço = preço × (1 − taxa) &nbsp;&nbsp;|&nbsp;&nbsp; −15% → × 0,85 \n\n Uma assinatura de streaming de R$ 40,00 com 15% de desconto: 40 · 0,15 = R$ 6,00 de\ndesconto, então o cliente paga 40 − 6 = R$ 34,00. Pelo fator, 40 · 0,85 = R$ 34,00\ndireto. Um tênis de R$ 280,00 com 4% de desconto cai para 280 · 0,96 = R$ 268,80. Uma\nluminária de R$ 75,90 com 20% cai para 75,90 · 0,80 = R$ 60,72. E um jogo de panelas de\nR$ 420,00 na Black Friday com 40% de desconto sai por 420 · 0,60 = R$ 252,00. \n\n A mesma ideia serve para salários e outras quantias. Se Ana Maria recebe\nR$ 2 700,00 e Marcos recebe 28% a menos, o salário dele é 2 700 · 0,72 = R$ 1 944,00.\nJá Eduardo, que recebe 20% a mais, ganha 2 700 · 1,20 = R$ 3 240,00. \n\n Atenção à armadilha mais famosa: aumentar 10% e depois dar 10% de desconto\n não  devolve o preço original. Isso acontece porque a segunda porcentagem é\ncalculada sobre um valor diferente do primeiro. \n", "fix": [{"p": "Uma assinatura de R$ 40,00 tem 15% de desconto. O cliente paga:", "alts": ["R$ 25,00", "R$ 34,00", "R$ 36,00", "R$ 6,00"], "certa": 1, "expl": "15% de 40 = 6. Então 40 − 6 = R$ 34,00 (ou 40 · 0,85 = 34)."}, {"p": "Qual é o fator de multiplicação para um desconto de 20%?", "alts": ["1,20", "0,02", "0,20", "0,80"], "certa": 3, "expl": "Desconto: tire a taxa de 1. 100% − 20% = 80% = 0,80."}, {"p": "Um jogo de panelas de R$ 420,00 tem 40% de desconto na Black Friday. O preço final é:", "alts": ["R$ 588,00", "R$ 380,00", "R$ 252,00", "R$ 168,00"], "certa": 2, "expl": "420 · 0,60 = 252. Cuidado: R$ 168,00 é apenas o valor do desconto, não o preço final."}, {"p": "Ana Maria recebe R$ 2 700,00. Marcos recebe 28% a menos que ela. O salário de Marcos é:", "alts": ["R$ 1 944,00", "R$ 756,00", "R$ 2 672,00", "R$ 3 456,00"], "certa": 0, "expl": "2 700 · 0,72 = 1 944. O valor R$ 756,00 é só a diferença (28% de 2 700)."}], "perg": [{"q": "Um tênis anunciado por R$ 359,90 ganha 12% de desconto no pagamento à vista. Calcule quanto a pessoa pagou e mostre as contas.", "modelo": "12% de 359,90 = 359,90 · 0,12 = 43,188, que arredondando dá R$ 43,19. Então o preço à vista é 359,90 − 43,19 = R$ 316,71. Pelo fator: 359,90 · 0,88 = R$ 316,71.", "checks": ["Calculei o valor do desconto (cerca de R$ 43,19)?", "Subtraí do preço original em vez de parar no desconto?", "Cheguei perto de R$ 316,71?"], "tipo": "aplicacao"}, {"q": "Teste a armadilha: pegue um preço de R$ 100,00, aumente 10% e depois dê 10% de desconto sobre o novo valor. Mostre as contas e diga por que não voltou para R$ 100,00.", "modelo": "Aumentando: 100 · 1,10 = R$ 110,00. Descontando 10% disso: 110 · 0,90 = R$ 99,00. Não voltou para 100 porque o aumento de 10% foi calculado sobre 100, mas o desconto de 10% foi calculado sobre 110, que é um valor maior. Por isso o desconto tirou R$ 11,00 e o aumento tinha colocado só R$ 10,00.", "checks": ["Cheguei em R$ 110,00 e depois em R$ 99,00?", "Expliquei que as porcentagens foram calculadas sobre valores diferentes?", "Escrevi com as minhas palavras, sem copiar o texto?"], "tipo": "aplicacao"}, {"q": "Numa empresa, o salário do nível II é 80% do salário do nível III. Se o gerente do nível III ganha R$ 14 650,00, calcule o salário do nível II e explique o passo.", "modelo": "Ser 80% do salário anterior é o mesmo que uma redução de 20%. Então multiplico por 0,80: 14 650 · 0,80 = R$ 11 720,00. O gerente do nível II ganha R$ 11 720,00.", "checks": ["Percebi que 80% corresponde a multiplicar por 0,80?", "Mostrei a conta 14 650 · 0,80?", "Cheguei em R$ 11 720,00?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 08 — Matemática financeira", "titulo": "O cofre do mercador: juros simples", "texto": "\n<p>Quem empresta dinheiro cobra por isso, e quem investe recebe por isso. Esse valor\nextra se chama <b>juros</b>. No regime de <b>juros simples</b>, os juros são sempre\ncalculados sobre o valor inicial, chamado de <b>capital</b>. A fórmula é:</p>\n\n<div class=\"formula\">J = C · i · t &nbsp;&nbsp;&nbsp; M = C + J</div>\n\n<p>Nessa fórmula, J são os juros, C é o capital, i é a taxa (sempre escrita como\nnúmero decimal) e t é o tempo. O <b>montante</b> M é o total: o que você tinha mais os\njuros que rendeu.</p>\n\n<p>A regra de ouro é que <b>a taxa e o tempo precisam estar na mesma unidade</b>. Se a\ntaxa é ao mês, o tempo tem que estar em meses. Exemplo do livro: Marina investiu\nR$ 60 000,00 a 2% ao mês durante 8 meses. Então J = 60 000 · 0,02 · 8 = R$ 9 600,00, e\no montante é 60 000 + 9 600 = R$ 69 600,00.</p>\n\n<p>Quando as unidades não batem, converta antes. Noventa dias são 3 meses. Um\ntrimestre são 3 meses, que equivalem a 0,25 ano. Uma taxa de 15% ao ano aplicada por\num trimestre rende 180 500 · 0,15 · 0,25 = R$ 6 768,75.</p>\n", "puro": "\n Quem empresta dinheiro cobra por isso, e quem investe recebe por isso. Esse valor\nextra se chama  juros . No regime de  juros simples , os juros são sempre\ncalculados sobre o valor inicial, chamado de  capital . A fórmula é: \n\n J = C · i · t &nbsp;&nbsp;&nbsp; M = C + J \n\n Nessa fórmula, J são os juros, C é o capital, i é a taxa (sempre escrita como\nnúmero decimal) e t é o tempo. O  montante  M é o total: o que você tinha mais os\njuros que rendeu. \n\n A regra de ouro é que  a taxa e o tempo precisam estar na mesma unidade . Se a\ntaxa é ao mês, o tempo tem que estar em meses. Exemplo do livro: Marina investiu\nR$ 60 000,00 a 2% ao mês durante 8 meses. Então J = 60 000 · 0,02 · 8 = R$ 9 600,00, e\no montante é 60 000 + 9 600 = R$ 69 600,00. \n\n Quando as unidades não batem, converta antes. Noventa dias são 3 meses. Um\ntrimestre são 3 meses, que equivalem a 0,25 ano. Uma taxa de 15% ao ano aplicada por\num trimestre rende 180 500 · 0,15 · 0,25 = R$ 6 768,75. \n", "fix": [{"p": "Um capital de R$ 1 000,00 é aplicado a 2% ao mês por 5 meses, em juros simples. Os juros são:", "alts": ["R$ 20,00", "R$ 200,00", "R$ 1 100,00", "R$ 100,00"], "certa": 3, "expl": "J = 1 000 · 0,02 · 5 = 100. Cuidado: R$ 1 100,00 é o montante, não os juros."}, {"p": "Larissa pegou R$ 4 000,00 emprestados a 3% ao mês. Se quitar em 2 meses, pagará de juros:", "alts": ["R$ 240,00", "R$ 4 240,00", "R$ 120,00", "R$ 2 400,00"], "certa": 0, "expl": "J = 4 000 · 0,03 · 2 = 240 reais de juros."}, {"p": "Uma taxa de 15% ao ano corresponde, em 3 meses, a:", "alts": ["3,75%", "45%", "1,25%", "5%"], "certa": 0, "expl": "15% ÷ 12 = 1,25% ao mês. Em 3 meses: 1,25 · 3 = 3,75%."}, {"p": "Marina investiu R$ 60 000,00 a 2% ao mês por 8 meses. O montante que ela recebe é:", "alts": ["R$ 69 600,00", "R$ 60 960,00", "R$ 76 800,00", "R$ 9 600,00"], "certa": 0, "expl": "Os juros são 9 600. O montante é capital + juros: 60 000 + 9 600 = R$ 69 600,00."}], "perg": [{"q": "Larissa pegou R$ 4 000,00 emprestados a juros simples de 3% ao mês. Quanto ela pagará de juros se quitar a dívida depois de 3 ANOS? Mostre a conversão e a conta.", "modelo": "A taxa é ao mês, então preciso passar o tempo para meses: 3 anos = 36 meses. Aplicando a fórmula: J = 4 000 · 0,03 · 36 = R$ 4 320,00 de juros.", "checks": ["Converti 3 anos para 36 meses?", "Usei a fórmula J = C · i · t?", "Cheguei em R$ 4 320,00?"], "tipo": "aplicacao"}, {"q": "Ainda sobre Larissa (R$ 4 000,00 a 3% ao mês): qual será o MONTANTE da dívida dela depois de 8 meses? Explique a diferença entre juros e montante na sua resposta.", "modelo": "Primeiro os juros: J = 4 000 · 0,03 · 8 = R$ 960,00. O montante é o capital mais os juros: M = 4 000 + 960 = R$ 4 960,00. A diferença é que os juros são só o valor extra que apareceu, e o montante é o total que ela vai devolver.", "checks": ["Calculei os juros (R$ 960,00)?", "Somei ao capital e cheguei em R$ 4 960,00?", "Expliquei a diferença entre juros e montante?"], "tipo": "aplicacao"}, {"q": "Invente uma situação sua de juros simples (escolha o capital, a taxa e o tempo), calcule os juros e o montante.", "modelo": "Exemplo: eu aplico R$ 2 500,00 a 1,5% ao mês durante 6 meses. J = 2 500 · 0,015 · 6 = R$ 225,00. O montante é M = 2 500 + 225 = R$ 2 725,00.", "checks": ["Escolhi capital, taxa e tempo meus?", "A taxa e o tempo ficaram na mesma unidade?", "Calculei os juros e também o montante?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 09 — Triângulos", "titulo": "As velas do navio: classificando triângulos", "texto": "\n<p>Todo triângulo pode ser classificado de <b>duas maneiras ao mesmo tempo</b>: pelos\nlados e pelos ângulos. As duas classificações convivem, e a prova costuma pedir as\nduas juntas.</p>\n\n<p><b>Quanto aos lados:</b> o <b>equilátero</b> tem os três lados iguais; o\n<b>isósceles</b> tem exatamente dois lados iguais (os lados iguais são chamados de\ncongruentes, e o terceiro é a base); o <b>escaleno</b> tem os três lados diferentes.</p>\n\n<p><b>Quanto aos ângulos:</b> o <b>retângulo</b> tem um ângulo de exatamente 90°; o\n<b>obtusângulo</b> tem um ângulo maior que 90°; o <b>acutângulo</b> tem os três\nângulos menores que 90°.</p>\n\n<div class=\"formula\">lados: equilátero · isósceles · escaleno &nbsp;|&nbsp; ângulos: retângulo · obtusângulo · acutângulo</div>\n\n<p>Duas informações que valem ponto: no triângulo equilátero, os três ângulos medem\n<b>60°</b> cada um, e por isso ele é sempre acutângulo. No triângulo isósceles, os dois\nângulos <b>da base</b> são iguais entre si. Essa última propriedade é a chave de quase\ntoda questão de isósceles com incógnita.</p>\n", "puro": "\n Todo triângulo pode ser classificado de  duas maneiras ao mesmo tempo : pelos\nlados e pelos ângulos. As duas classificações convivem, e a prova costuma pedir as\nduas juntas. \n\n  Quanto aos lados:  o  equilátero  tem os três lados iguais; o\n isósceles  tem exatamente dois lados iguais (os lados iguais são chamados de\ncongruentes, e o terceiro é a base); o  escaleno  tem os três lados diferentes. \n\n  Quanto aos ângulos:  o  retângulo  tem um ângulo de exatamente 90°; o\n obtusângulo  tem um ângulo maior que 90°; o  acutângulo  tem os três\nângulos menores que 90°. \n\n lados: equilátero · isósceles · escaleno &nbsp;|&nbsp; ângulos: retângulo · obtusângulo · acutângulo \n\n Duas informações que valem ponto: no triângulo equilátero, os três ângulos medem\n 60°  cada um, e por isso ele é sempre acutângulo. No triângulo isósceles, os dois\nângulos  da base  são iguais entre si. Essa última propriedade é a chave de quase\ntoda questão de isósceles com incógnita. \n", "fix": [{"p": "Um triângulo tem lados 4 cm, 4 cm e 3 cm. Quanto aos lados, ele é:", "alts": ["isósceles", "retângulo", "escaleno", "equilátero"], "certa": 0, "expl": "Dois lados iguais (4 e 4) e um diferente (3): isósceles. 'Retângulo' é classificação de ângulo, não de lado."}, {"p": "Um triângulo tem ângulos de 75°, 60° e 45°. Ele é classificado como:", "alts": ["equilátero", "retângulo", "acutângulo", "obtusângulo"], "certa": 2, "expl": "Todos os três ângulos são menores que 90°, então é acutângulo."}, {"p": "Um triângulo tem um ângulo de 120°. Ele é:", "alts": ["acutângulo", "equilátero", "obtusângulo", "retângulo"], "certa": 2, "expl": "Um ângulo maior que 90° faz do triângulo um obtusângulo."}, {"p": "Quanto medem os ângulos internos de um triângulo equilátero?", "alts": ["90°, 45° e 45°", "60° cada um", "180° cada um", "50°, 60° e 70°"], "certa": 1, "expl": "Os três lados iguais garantem três ângulos iguais, e 180° ÷ 3 = 60°."}], "perg": [{"q": "Um triângulo tem lados de 5 cm, 5 cm e 8 cm, e um de seus ângulos mede 100°. Classifique esse triângulo das DUAS maneiras e justifique cada uma.", "modelo": "Quanto aos lados, é isósceles, porque tem dois lados iguais (5 e 5) e um diferente (8). Quanto aos ângulos, é obtusângulo, porque tem um ângulo de 100°, que é maior que 90°.", "checks": ["Classifiquei quanto aos lados (isósceles) com a justificativa?", "Classifiquei quanto aos ângulos (obtusângulo) com a justificativa?", "Usei as duas classificações, e não só uma?"], "tipo": "aplicacao"}, {"q": "Descreva um triângulo que seja isósceles e retângulo ao mesmo tempo. Quanto medem os três ângulos dele? Explique como você descobriu.", "modelo": "Se é retângulo, um ângulo mede 90°, e sobram 90° para os outros dois. Se também é isósceles, esses dois são iguais, então cada um mede 45°. Os ângulos são 90°, 45° e 45°.", "checks": ["Disse que um ângulo mede 90°?", "Cheguei em 45° e 45° para os outros dois?", "Expliquei como descobri, usando a soma 180°?"], "tipo": "aplicacao"}, {"q": "Um colega disse: 'todo triângulo isósceles é acutângulo'. Dê um exemplo que mostre que ele está errado.", "modelo": "Está errado. Basta pensar num triângulo isósceles com ângulos de 100°, 40° e 40°: ele tem dois ângulos iguais, então é isósceles, mas tem um ângulo maior que 90°, então é obtusângulo. Um triângulo de 90°, 45° e 45° também é isósceles e não é acutângulo.", "checks": ["Dei um exemplo com números de ângulos?", "Meu exemplo tem dois ângulos iguais (isósceles)?", "Meu exemplo tem um ângulo de 90° ou mais, mostrando que o colega errou?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 09 — Triângulos", "titulo": "A bússola dos 180°: ângulos internos e externos", "texto": "\n<p>A propriedade mais usada de todas: a <b>soma dos ângulos internos</b> de qualquer\ntriângulo é sempre <b>180°</b>. Não importa o tamanho nem o formato. Sabendo dois\nângulos, o terceiro sai de graça.</p>\n\n<div class=\"formula\">â + b̂ + ĉ = 180°</div>\n\n<p>Se dois ângulos medem 57° e 34°, o terceiro mede 180 − (57 + 34) = 180 − 91 = 89°.\nNum triângulo retângulo com um ângulo agudo de 41°, o outro agudo mede\n180 − 90 − 41 = 49°.</p>\n\n<p>Existe também o <b>ângulo externo</b>, que é formado pelo prolongamento de um lado.\nEle tem duas propriedades muito cobradas. A primeira: o ângulo externo mais o interno\nque fica ao lado dele somam <b>180°</b>, porque juntos formam uma linha reta. A\nsegunda, chamada de teorema do ângulo externo: o ângulo externo é <b>igual à soma dos\ndois ângulos internos não adjacentes</b> a ele.</p>\n\n<div class=\"formula\">externo = soma dos dois internos NÃO vizinhos</div>\n\n<p>Um exemplo do livro juntando tudo: num triângulo ABC isósceles de base BC, os\nângulos externos da base medem 2x − 40 e x + 45. Como os ângulos da base são iguais,\nos externos também são: 2x − 40 = x + 45, então x = 85. Cada externo mede 130°, cada\nângulo da base mede 180 − 130 = 50°, e o ângulo do vértice A mede\n180 − 50 − 50 = 80°.</p>\n", "puro": "\n A propriedade mais usada de todas: a  soma dos ângulos internos  de qualquer\ntriângulo é sempre  180° . Não importa o tamanho nem o formato. Sabendo dois\nângulos, o terceiro sai de graça. \n\n â + b̂ + ĉ = 180° \n\n Se dois ângulos medem 57° e 34°, o terceiro mede 180 − (57 + 34) = 180 − 91 = 89°.\nNum triângulo retângulo com um ângulo agudo de 41°, o outro agudo mede\n180 − 90 − 41 = 49°. \n\n Existe também o  ângulo externo , que é formado pelo prolongamento de um lado.\nEle tem duas propriedades muito cobradas. A primeira: o ângulo externo mais o interno\nque fica ao lado dele somam  180° , porque juntos formam uma linha reta. A\nsegunda, chamada de teorema do ângulo externo: o ângulo externo é  igual à soma dos\ndois ângulos internos não adjacentes  a ele. \n\n externo = soma dos dois internos NÃO vizinhos \n\n Um exemplo do livro juntando tudo: num triângulo ABC isósceles de base BC, os\nângulos externos da base medem 2x − 40 e x + 45. Como os ângulos da base são iguais,\nos externos também são: 2x − 40 = x + 45, então x = 85. Cada externo mede 130°, cada\nângulo da base mede 180 − 130 = 50°, e o ângulo do vértice A mede\n180 − 50 − 50 = 80°. \n", "fix": [{"p": "Dois ângulos de um triângulo medem 20° e 30°. O terceiro ângulo mede:", "alts": ["130°", "120°", "50°", "150°"], "certa": 0, "expl": "180 − (20 + 30) = 180 − 50 = 130°."}, {"p": "Num triângulo retângulo, um dos ângulos agudos mede 41°. O outro ângulo agudo mede:", "alts": ["59°", "139°", "90°", "49°"], "certa": 3, "expl": "180 − 90 − 41 = 49°. Nos dois ângulos agudos de um triângulo retângulo a soma é sempre 90°."}, {"p": "O ângulo externo de um triângulo é igual a:", "alts": ["diferença entre os dois ângulos internos vizinhos", "soma dos três ângulos internos", "metade do ângulo interno vizinho", "soma dos dois ângulos internos não adjacentes a ele"], "certa": 3, "expl": "É o teorema do ângulo externo. E ele também é o suplemento do interno adjacente (os dois somam 180°)."}, {"p": "Num triângulo, o segundo ângulo mede 28° a menos que o primeiro e o terceiro mede 10° a mais que o primeiro. Os três ângulos são:", "alts": ["66°, 38° e 76°", "66°, 94° e 20°", "70°, 42° e 80°", "60°, 32° e 70°"], "certa": 0, "expl": "x + (x − 28) + (x + 10) = 180 → 3x − 18 = 180 → 3x = 198 → x = 66. Logo 66°, 38° e 76°, que somam 180°."}], "perg": [{"q": "Uma escada está apoiada na parede e forma um ângulo de 60° com o chão. Sabendo que a parede é perpendicular ao chão, calcule o ângulo entre a escada e a parede e explique o raciocínio.", "modelo": "A parede e o chão formam 90°, então o triângulo é retângulo. A soma dos três ângulos é 180°: 90 + 60 + x = 180, logo x = 30°. O ângulo entre a escada e a parede é 30°.", "checks": ["Percebi que o triângulo é retângulo (90° entre parede e chão)?", "Usei a soma 180° para achar o ângulo que faltava?", "Cheguei em 30°?"], "tipo": "aplicacao"}, {"q": "Num triângulo ABC isósceles de base BC, os ângulos externos da base valem 2x − 40 e x + 45. Encontre x e depois os três ângulos internos do triângulo.", "modelo": "Como os ângulos da base de um isósceles são iguais, os externos também são: 2x − 40 = x + 45 → x = 85. Cada externo mede 2·85 − 40 = 130°. Cada ângulo interno da base mede 180 − 130 = 50°. O ângulo do vértice mede 180 − 50 − 50 = 80°.", "checks": ["Igualei as duas expressões e achei x = 85?", "Achei os ângulos da base (50° cada)?", "Achei o ângulo do vértice (80°)?"], "tipo": "aplicacao"}, {"q": "Um triângulo tem um ângulo externo de 110°, e um dos internos não adjacentes a ele mede 40°. Descubra os três ângulos internos do triângulo e escreva como chegou lá.", "modelo": "Pelo teorema do ângulo externo, 110° é a soma dos dois internos não adjacentes. Se um deles é 40°, o outro é 110 − 40 = 70°. O terceiro interno é o vizinho do externo: 180 − 110 = 70°. Os ângulos são 40°, 70° e 70°, e somam 180°.", "checks": ["Usei o teorema do ângulo externo para achar 70°?", "Achei o interno adjacente fazendo 180 − 110?", "Conferi que os três ângulos somam 180°?"], "tipo": "aplicacao"}]}, {"cap": "Cap. 09 — Triângulos", "titulo": "Três varas e um segredo: condição de existência", "texto": "\n<p>Nem todo trio de medidas forma um triângulo. Pegue varetas de 3 cm, 4 cm e 8 cm e\ntente: as duas menores juntas não alcançam a maior, e o triângulo não fecha. Daí vem a\n<b>condição de existência</b>: cada lado precisa ser <b>menor que a soma</b> dos outros\ndois.</p>\n\n<div class=\"formula\">|b − c| &lt; a &lt; b + c</div>\n\n<p>Essa fórmula diz duas coisas ao mesmo tempo: um lado tem que ser menor que a soma\ndos outros dois e maior que a diferença entre eles. Se dois lados medem 5 e 7, o\nterceiro precisa ser maior que 2 e menor que 12. Na prática, para conferir três\nmedidas prontas, basta testar se a soma das duas menores é maior que a maior.</p>\n\n<p>Quando aparecem letras, o caminho é montar as <b>três desigualdades</b> e ver quais\nvalores servem em todas ao mesmo tempo. Num triângulo de lados 2x, x − 1 e 13: de\n2x &lt; (x − 1) + 13 vem x &lt; 12; de 13 &lt; 2x + (x − 1) vem 3x &gt; 14, ou seja,\nx &gt; 4,67. Juntando, x pode ser qualquer inteiro de 5 até 11.</p>\n\n<p>Um detalhe que muita gente esquece: as medidas dos lados precisam ser\n<b>positivas</b>. Se aparecer uma expressão como 12 − 2x, ela também tem que ser maior\nque zero.</p>\n", "puro": "\n Nem todo trio de medidas forma um triângulo. Pegue varetas de 3 cm, 4 cm e 8 cm e\ntente: as duas menores juntas não alcançam a maior, e o triângulo não fecha. Daí vem a\n condição de existência : cada lado precisa ser  menor que a soma  dos outros\ndois. \n\n |b − c| &lt; a &lt; b + c \n\n Essa fórmula diz duas coisas ao mesmo tempo: um lado tem que ser menor que a soma\ndos outros dois e maior que a diferença entre eles. Se dois lados medem 5 e 7, o\nterceiro precisa ser maior que 2 e menor que 12. Na prática, para conferir três\nmedidas prontas, basta testar se a soma das duas menores é maior que a maior. \n\n Quando aparecem letras, o caminho é montar as  três desigualdades  e ver quais\nvalores servem em todas ao mesmo tempo. Num triângulo de lados 2x, x − 1 e 13: de\n2x &lt; (x − 1) + 13 vem x &lt; 12; de 13 &lt; 2x + (x − 1) vem 3x &gt; 14, ou seja,\nx &gt; 4,67. Juntando, x pode ser qualquer inteiro de 5 até 11. \n\n Um detalhe que muita gente esquece: as medidas dos lados precisam ser\n positivas . Se aparecer uma expressão como 12 − 2x, ela também tem que ser maior\nque zero. \n", "fix": [{"p": "As medidas 3 cm, 4 cm e 8 cm formam um triângulo?", "alts": ["Não, porque 3 + 4 é menor que 8", "Sim, porque as três medidas são diferentes", "Não, porque nenhum lado pode ser par", "Sim, porque 8 é menor que 3 · 4"], "certa": 0, "expl": "A soma das duas menores (7) precisa ser MAIOR que a maior (8), e não é. Logo o triângulo não existe."}, {"p": "Dois lados de um triângulo medem 5 e 7. O terceiro lado x precisa estar entre:", "alts": ["7 e 12", "5 e 7", "2 e 12", "0 e 35"], "certa": 2, "expl": "Maior que a diferença (7 − 5 = 2) e menor que a soma (7 + 5 = 12)."}, {"p": "Os lados de um triângulo medem x − 1, x + 1 e 10. O menor valor inteiro de x que garante a existência é:", "alts": ["5", "6", "10", "11"], "certa": 1, "expl": "10 < (x − 1) + (x + 1) = 2x → x > 5. O menor inteiro maior que 5 é 6."}, {"p": "Num triângulo de lados 2x, x − 1 e 13, os valores inteiros possíveis de x são:", "alts": ["de 1 a 12", "de 5 a 12", "de 4 a 11", "de 5 a 11"], "certa": 3, "expl": "2x < x + 12 dá x < 12; 13 < 3x − 1 dá x > 4,67. Inteiros de 5 até 11."}], "perg": [{"q": "Você tem três varetas de 4 cm, 9 cm e 5 cm. Dá para montar um triângulo com elas? Faça o teste e explique a resposta.", "modelo": "Somo as duas menores: 4 + 5 = 9. Como 9 não é MAIOR que 9, elas só encostam nas pontas e não fecham um triângulo. Então não dá para montar.", "checks": ["Somei as duas medidas menores?", "Comparei essa soma com o lado maior?", "Concluí que não forma triângulo e disse por quê?"], "tipo": "aplicacao"}, {"q": "Os lados de um triângulo são x + 4, 2x + 6 e 12 − 2x. Encontre o MENOR valor inteiro que x pode assumir para que o triângulo exista. Mostre pelo menos uma das desigualdades.", "modelo": "Pela condição, 2x + 6 < (x + 4) + (12 − 2x), ou seja, 2x + 6 < 16 − x, o que dá 3x < 10 e x < 3,33. Também 12 − 2x < (x + 4) + (2x + 6) dá 2 < 5x, então x > 0,4. Juntando, x fica entre 0,4 e 3,33, e o menor inteiro possível é x = 1.", "checks": ["Montei pelo menos uma desigualdade com os três lados?", "Encontrei o intervalo em que x pode ficar?", "Respondi que o menor inteiro é 1?"], "tipo": "aplicacao"}, {"q": "Dois lados de um triângulo medem 6 cm e 10 cm. Escreva o intervalo em que o terceiro lado pode estar e explique, com as suas palavras, de onde saem os dois limites.", "modelo": "O terceiro lado tem que ser maior que a diferença, 10 − 6 = 4, e menor que a soma, 10 + 6 = 16. Então ele fica entre 4 cm e 16 cm. O limite de cima aparece porque os dois lados juntos precisam alcançar o terceiro, e o de baixo porque, se for curto demais, os outros dois não conseguem se encontrar.", "checks": ["Escrevi o intervalo entre 4 e 16?", "Expliquei de onde vem o limite de cima (a soma)?", "Expliquei de onde vem o limite de baixo (a diferença)?"], "tipo": "aplicacao"}]}], "pegadinhas": ["Na regra de três, conferir a unidade ANTES de montar: 4 min 30 s vira 4,5 min, 90 dias viram 3 meses, 1 trimestre vira 3 meses.", "Regra de três inversa: só a SEGUNDA razão é invertida. Inverter as duas é o mesmo que não inverter nenhuma.", "Se a resposta de um problema inverso aumentou quando deveria diminuir, você esqueceu de inverter.", "Desconto de 40% não é o mesmo que pagar 40%: o fator é 0,60 e não 0,40.", "O valor do desconto NÃO é a resposta final. A pergunta quase sempre quer o preço depois do desconto.", "Aumentar 10% e depois descontar 10% não volta ao preço original, porque a segunda porcentagem incide sobre outro valor.", "Em juros simples, taxa e tempo devem estar na mesma unidade: taxa ao mês exige tempo em meses.", "Juros (J) e montante (M) são coisas diferentes: o montante já inclui o capital de volta.", "Classificar triângulo é responder DUAS coisas: pelos lados e pelos ângulos. Retângulo é ângulo, isósceles é lado.", "Na condição de existência, testar só uma desigualdade não basta quando há letras: monte as três e ainda confira se todos os lados ficam positivos."], "cobertura": [["Razão, proporção e propriedade fundamental (p. 36 a 38)", "Bloco 1"], ["Grandezas diretamente proporcionais (p. 36 e 37)", "Bloco 2"], ["Grandezas inversamente proporcionais (p. 37 e 38)", "Bloco 3"], ["Os três passos da regra de três e os exercícios 31 e 32 (p. 38 a 40)", "Bloco 4"], ["Porcentagem e acréscimo — exercício 07 (p. 65)", "Bloco 5"], ["Decréscimo, descontos e salários — exercícios 08 a 13 (p. 65 a 68)", "Bloco 6"], ["Juros simples e montante — exercícios 17 a 21 (p. 75 e 76)", "Bloco 7"], ["Classificação dos triângulos (p. 109 e 112)", "Bloco 8"], ["Soma dos ângulos internos e ângulo externo (p. 117 a 120)", "Bloco 9"], ["Condição de existência do triângulo (p. 128)", "Bloco 10"]]};
+var KEY = 'mat7_rota_leitura';
+var E = { blocos: {} };
+
+function esc(t){ var d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+function est(i){ if(!E.blocos[i]) E.blocos[i] = {fixResp:[null,null,null,null], corrigida:false, acertos:0, resp:['','',''], transcrita:[false,false,false], tentou:[null,null,null], chk:[[],[],[]], feito:false}; return E.blocos[i]; }
+
+function blocoLiberado(i){
+  if(i===0) return true;
+  var a = est(i-1);
+  return a.feito === true;
+}
+
+function montar(){
+  var cx = document.getElementById('blocos');
+  cx.innerHTML = '';
+  D.blocos.forEach(function(b,i){
+    var s = est(i);
+    var lib = blocoLiberado(i);
+    var div = document.createElement('div');
+    div.className = 'bloco carta' + (lib ? '' : ' trancado');
+    div.id = 'bloco'+i;
+    var statusTxt = s.feito ? (temRevisar(i) ? '<span class="selo-rev">🔁 revisar</span>' : '<span class="selo-ok">✅ concluído</span>') : (lib ? 'em aberto' : '🔒 trancado');
+    div.innerHTML =
+      '<div class="cabeca"><div class="num">'+(i+1)+'</div>'+
+      '<div><div class="pequeno" style="opacity:.7">'+b.cap+'</div><h2 style="margin:0">'+b.titulo+'</h2></div>'+
+      '<div class="status">'+statusTxt+'</div></div>'+
+      '<div class="corpo">'+b.texto+
+        '<h3>✏️ Fixação — acerte 3 das 4 para seguir</h3><div id="fix'+i+'"></div>'+
+        '<div id="fixbtn'+i+'"></div>'+
+        '<div id="pergs'+i+'" class="oculto"><h3>🖊️ Escreva com as suas palavras</h3><div id="pcx'+i+'"></div>'+
+        '<div class="centro"><button class="btn btn-1" id="conf'+i+'">Conferir minhas respostas</button></div></div>'+
+      '</div>';
+    cx.appendChild(div);
+    if(lib){ montarFix(i); montarPerg(i); }
+  });
+  pintarProgresso();
+}
+
+function montarFix(i){
+  var b = D.blocos[i], s = est(i), cx = document.getElementById('fix'+i);
+  cx.innerHTML='';
+  b.fix.forEach(function(f,j){
+    var d = document.createElement('div'); d.className='fix';
+    var alts = f.alts.map(function(a,k){
+      var cls='alt';
+      if(s.fixResp[j]===k) cls+=' escolhida';
+      if(s.corrigida){ if(k===f.certa) cls='alt certa'; else if(s.fixResp[j]===k) cls='alt errada'; }
+      return '<label class="'+cls+'" data-q="'+j+'" data-a="'+k+'">'+String.fromCharCode(97+k)+') '+esc(a)+'</label>';
+    }).join('');
+    d.innerHTML = '<div><b>'+(j+1)+'.</b> '+f.p+'</div>'+alts+
+      (s.corrigida ? '<div class="modelo"><b>Por quê:</b> '+esc(f.expl)+'</div>' : '');
+    cx.appendChild(d);
+  });
+  if(!s.corrigida){
+    cx.querySelectorAll('.alt').forEach(function(el){
+      el.onclick = function(){
+        s.fixResp[+el.dataset.q] = +el.dataset.a;
+        salvarAgora(); montarFix(i); botaoFix(i);
+      };
+    });
+  }
+  botaoFix(i);
+}
+
+function botaoFix(i){
+  var s = est(i), b = D.blocos[i], cx = document.getElementById('fixbtn'+i);
+  if(s.corrigida){
+    var pc = Math.round(s.acertos/b.fix.length*100);
+    if(pc >= 70){
+      cx.innerHTML = '<div class="modelo">✅ Você acertou <b>'+s.acertos+' de '+b.fix.length+'</b> ('+pc+'%). Pode seguir para as perguntas.</div>';
+      document.getElementById('pergs'+i).classList.remove('oculto');
+    } else {
+      cx.innerHTML = '<div class="aviso-vermelho">Você acertou '+s.acertos+' de '+b.fix.length+' ('+pc+'%). É preciso pelo menos 70% para avançar. Releia o texto e tente de novo.</div>'+
+        '<div class="centro"><button class="btn btn-1" id="refaz'+i+'">🔄 Refazer a fixação</button></div>';
+      document.getElementById('pergs'+i).classList.add('oculto');
+      document.getElementById('refaz'+i).onclick = function(){
+        s.fixResp=[null,null,null,null]; s.corrigida=false; s.acertos=0;
+        salvarAgora(); montarFix(i);
+      };
+    }
+    return;
+  }
+  var completo = s.fixResp.every(function(x){ return x!==null; });
+  cx.innerHTML = '<div class="centro"><button class="btn btn-1" id="corr'+i+'"'+(completo?'':' disabled')+'>Corrigir fixação</button>'+
+    (completo?'':'<div class="pequeno" style="margin-top:6px;opacity:.7">responda os 4 para corrigir</div>')+'</div>';
+  if(completo) document.getElementById('corr'+i).onclick = function(){
+    s.acertos = 0;
+    D.blocos[i].fix.forEach(function(f,j){ if(s.fixResp[j]===f.certa) s.acertos++; });
+    s.corrigida = true; salvarAgora(); montarFix(i);
+  };
+}
+
+function montarPerg(i){
+  var b = D.blocos[i], s = est(i), cx = document.getElementById('pcx'+i);
+  cx.innerHTML = '';
+  b.perg.forEach(function(p,j){
+    var d = document.createElement('div');
+    d.className = 'perg' + (s.transcrita[j] ? ' vermelha' : '');
+    d.id = 'p'+i+'_'+j;
+    d.innerHTML = '<div class="enun">'+(j+1)+'. '+p.q+'</div>'+
+      '<textarea rows="4" id="t'+i+'_'+j+'" placeholder="Escreva aqui com as suas palavras...">'+esc(s.resp[j]||'')+'</textarea>'+
+      '<div id="av'+i+'_'+j+'"></div>';
+    cx.appendChild(d);
+    var ta = document.getElementById('t'+i+'_'+j);
+    ta.oninput = function(){
+      s.resp[j] = ta.value;
+      if(s.transcrita[j] && s.tentou[j] && !Anticopia.ehCopia(ta.value, b.puro, p.q)){
+        s.transcrita[j] = false;
+        document.getElementById('p'+i+'_'+j).classList.remove('vermelha');
+        document.getElementById('av'+i+'_'+j).innerHTML = '<div class="modelo">✅ Agora está com as suas palavras. A marca vermelha saiu.</div>' + blocoModelo(i,j);
+        ligaChecks(i,j);
+        pintarStatus(i);
+      }
+      salvarAgora();
+    };
+    if(s.feito) mostrarConferido(i,j,false);
+  });
+  document.getElementById('conf'+i).onclick = function(){ conferir(i); };
+}
+
+function blocoModelo(i,j){
+  var p = D.blocos[i].perg[j], s = est(i);
+  var itens = p.checks.map(function(c,k){
+    var st = s.chk[j] && s.chk[j][k];
+    return '<div class="item"><span>'+esc(c)+'</span>'+
+      '<button class="mini'+(st==='sim'?' on-sim':'')+'" data-k="'+k+'" data-v="sim">Sim</button>'+
+      '<button class="mini'+(st==='nao'?' on-nao':'')+'" data-k="'+k+'" data-v="nao">Não</button></div>';
+  }).join('');
+  return '<div class="modelo"><b>Resposta modelo:</b> '+esc(p.modelo)+'</div>'+
+    '<div class="checklist" id="ck'+i+'_'+j+'"><b>Confira a SUA resposta:</b>'+itens+'</div>';
+}
+
+function ligaChecks(i,j){
+  var s = est(i);
+  var cx = document.getElementById('ck'+i+'_'+j);
+  if(!cx) return;
+  cx.querySelectorAll('.mini').forEach(function(bt){
+    bt.onclick = function(){
+      s.chk[j] = s.chk[j] || [];
+      s.chk[j][+bt.dataset.k] = bt.dataset.v;
+      salvarAgora();
+      document.getElementById('av'+i+'_'+j).innerHTML =
+        (document.getElementById('av'+i+'_'+j).querySelector('.aviso-vermelho') ? '<div class="aviso-vermelho">⚠️ Esta resposta ficou muito parecida com o texto. Ela entra na lista "para revisar". Se reescrever com as suas palavras, a marca some.</div>' : '')
+        + blocoModelo(i,j);
+      ligaChecks(i,j);
+      pintarStatus(i);
+    };
+  });
+}
+
+function mostrarConferido(i,j,vermelho){
+  var av = document.getElementById('av'+i+'_'+j);
+  av.innerHTML = (vermelho ? '<div class="aviso-vermelho">⚠️ Esta resposta ficou muito parecida com o texto. Ela entra na lista "para revisar". Se reescrever com as suas palavras, a marca some.</div>' : '') + blocoModelo(i,j);
+  ligaChecks(i,j);
+}
+
+function conferir(i){
+  var b = D.blocos[i], s = est(i);
+  var faltando = [];
+  for(var j=0;j<3;j++){
+    var v = (document.getElementById('t'+i+'_'+j).value||'').trim();
+    s.resp[j] = v;
+    if(v.length < 3) faltando.push(j+1);
+  }
+  if(faltando.length){
+    modal('✍️ Falta responder', '<p>Responda as três perguntas antes de conferir. Ainda falta: <b>'+faltando.join(', ')+'</b>.</p>', [{texto:'Ok', classe:'btn-1'}]);
+    return;
+  }
+  var travou = false;
+  for(var j=0;j<3;j++){
+    var p = b.perg[j];
+    var copia = Anticopia.ehCopia(s.resp[j], b.puro, p.q);
+    if(copia && !s.tentou[j]){
+      s.tentou[j] = s.resp[j];
+      travou = true;
+      document.getElementById('av'+i+'_'+j).innerHTML =
+        '<div class="aviso-copia">✋ Boa parte da sua resposta está igual ao texto. Tente reescrever com as <b>suas</b> palavras — explique como se fosse para um amigo, sem olhar o texto. Pode ficar mais curto e simples, o que vale é ser SEU.</div>';
+      document.getElementById('t'+i+'_'+j).focus();
+    } else if(copia){
+      s.transcrita[j] = true;
+    } else {
+      s.transcrita[j] = false;
+    }
+  }
+  salvarAgora();
+  if(travou){
+    montarPergAviso(i);
+    return;
+  }
+  s.feito = true;
+  s.quando = new Date().toLocaleString('pt-BR');
+  for(var j=0;j<3;j++){
+    document.getElementById('p'+i+'_'+j).classList.toggle('vermelha', !!s.transcrita[j]);
+    mostrarConferido(i, j, !!s.transcrita[j]);
+  }
+  salvarAgora();
+  montar();
+  var el = document.getElementById('bloco'+Math.min(i+1, D.blocos.length-1));
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function montarPergAviso(i){
+  /* mantém os avisos já escritos; só garante que o bloco não avance */
+  pintarStatus(i);
+}
+
+function temRevisar(i){
+  var s = est(i);
+  if(s.transcrita.some(function(x){return x;})) return true;
+  for(var j=0;j<3;j++){
+    var ch = s.chk[j]||[];
+    var n = D.blocos[i].perg[j].checks.length;
+    for(var k=0;k<n;k++){ if(ch[k]==='nao') return true; if(!ch[k]) return true; }
+  }
+  return false;
+}
+
+function pintarStatus(i){
+  var el = document.querySelector('#bloco'+i+' .status');
+  if(!el) return;
+  var s = est(i);
+  el.innerHTML = s.feito ? (temRevisar(i) ? '<span class="selo-rev">🔁 revisar</span>' : '<span class="selo-ok">✅ concluído</span>') : 'em aberto';
+  pintarProgresso();
+}
+
+function pintarProgresso(){
+  var n = 0;
+  for(var i=0;i<D.blocos.length;i++) if(est(i).feito) n++;
+  document.getElementById('barra-geral').style.width = (n/D.blocos.length*100)+'%';
+  document.getElementById('progresso-txt').textContent = n+' de '+D.blocos.length+' portos concluídos';
+  var fim = document.getElementById('final');
+  if(n === D.blocos.length){ fim.classList.remove('oculto'); montarFinal(); }
+  var verm = 0;
+  for(var i=0;i<D.blocos.length;i++){ var s=est(i); if(s.feito) verm += s.transcrita.filter(function(x){return x;}).length; }
+  RELOGIO.extra({blocosFeitos:n, totalBlocos:D.blocos.length, paraRevisar:contarRevisar(), vermelhas:verm});
+}
+
+function contarRevisar(){
+  var t = 0;
+  for(var i=0;i<D.blocos.length;i++){
+    var s = est(i);
+    if(!s.feito) continue;
+    for(var j=0;j<3;j++){
+      if(s.transcrita[j]) { t++; continue; }
+      var ch = s.chk[j]||[];
+      var n = D.blocos[i].perg[j].checks.length;
+      for(var k=0;k<n;k++) if(ch[k]==='nao'){ t++; break; }
+    }
+  }
+  return t;
+}
+
+function montarFinal(){
+  var ol = document.getElementById('lista-pegadinhas');
+  if(!ol.children.length) D.pegadinhas.forEach(function(p){ var li=document.createElement('li'); li.textContent=p; ol.appendChild(li); });
+  var tb = document.getElementById('tab-cobertura');
+  if(!tb.children.length) D.cobertura.forEach(function(c){ var tr=document.createElement('tr'); tr.innerHTML='<td>'+esc(c[0])+'</td><td>'+esc(c[1])+'</td>'; tb.appendChild(tr); });
+  var lr = document.getElementById('lista-revisar');
+  var itens = [];
+  for(var i=0;i<D.blocos.length;i++){
+    var s = est(i);
+    for(var j=0;j<3;j++){
+      var motivo = [];
+      if(s.transcrita[j]) motivo.push('resposta muito parecida com o texto');
+      var ch = s.chk[j]||[];
+      D.blocos[i].perg[j].checks.forEach(function(c,k){ if(ch[k]==='nao') motivo.push('faltou: '+c.replace('Minha resposta disse que ','').replace('?','')); });
+      if(motivo.length) itens.push('<li><b>Porto '+(i+1)+', pergunta '+(j+1)+'</b> — '+esc(motivo.join('; '))+'</li>');
+    }
+  }
+  lr.innerHTML = itens.length ? '<ol class="limpa">'+itens.join('')+'</ol>' : '<p class="selo-ok">Nada pendente. Todas as respostas ficaram com as suas palavras e com os pontos-chave marcados. ⚓</p>';
+}
+
+/* ---- inicialização ---- */
+painelSalvar(KEY,
+  function(){ return E; },
+  function(sal){ if(sal && sal.blocos) E = sal; },
+  function(){ E = {blocos:{}}; }
+);
+montar();
+RELOGIO.init({key:KEY, minutos:45, titulo:'Pronto para zarpar?', aoTerminar:function(){
+  modal('⚓ Estudo encerrado', '<p>Seu tempo foi salvo. Você pode voltar quando quiser — as respostas ficam guardadas.</p>', [{texto:'Ok', classe:'btn-1'}]);
+}});
+</script>
+</body>
+</html>
