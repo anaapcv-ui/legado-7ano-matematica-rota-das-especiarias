@@ -634,7 +634,7 @@ function montarPerg(i){
       }
       salvarAgora();
     };
-    if(s.feito) mostrarConferido(i,j,false);
+    if(s.feito) mostrarConferido(i,j,!!s.transcrita[j]);
   });
   document.getElementById('conf'+i).onclick = function(){ conferir(i); };
 }
